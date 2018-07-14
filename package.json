@@ -1,0 +1,30 @@
+{
+  "name": "node-koa",
+  "version": "1.0.0",
+  "description": "api",
+  "main": "app.js",
+  "dependencies": {
+    "koa": "^2.5.2",
+    "koa-router": "^7.4.0",
+    "mongoose": "^5.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hearingguo/node-koa.git"
+  },
+  "keywords": [
+    "node",
+    "koa",
+    "mongodb"
+  ],
+  "author": "hearingguo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hearingguo/node-koa/issues"
+  },
+  "homepage": "https://github.com/hearingguo/node-koa#readme"
+}
