@@ -1,5 +1,5 @@
 /**
- * 登录
+ * 用户信息
  */
 
 const Auth = require("../model/auth")
