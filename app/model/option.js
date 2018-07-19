@@ -36,7 +36,12 @@ const optionSchema = new mongoose.Schema({
 	email: String,
 
 	// 备案号
-	icp: String
+	icp: String,
+
+	meta: {
+    votes: Number,
+    favs:  Number
+  }
 
 });
 

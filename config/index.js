@@ -1,6 +1,6 @@
 
 exports.MONGODB = {
-	uri: 'mongodb://127.0.0.1:8000/my_blog',
+	uri: 'mongodb://127.0.0.1:27017/my_blog',
 	username: argv.db_username || 'DB_username',
 	password: argv.db_password || 'DB_password'
 }
