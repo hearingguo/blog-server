@@ -1,5 +1,14 @@
 exports.msg_ch = {
   error: '服务器错误',
+  invalid_params: '无效的参数',
+  get_success: '获取成功',
+  get_fail: '获取失败',
+  post_success: '添加成功',
+  post_fail: '添加失败',
+  put_success: '修改成功',
+  put_fail: '修改失败',
+  delete_success: '删除成功',
+  delete_fail: '删除失败',
   option_get_success: '获取配置项成功',
   option_get_fail: '获取配置项失败',
   option_put_success: '修改配置项成功',
@@ -9,4 +18,7 @@ exports.msg_ch = {
   auth_put_success: '修改用户资料成功',
   auth_put_fail: '修改用户资料失败',
   auth_put_password_fail: '原密码错误',
+  auth_post_fail_null: '用户名不存在',
+  auth_post_fail_error: '密码不正确',
+  auth_post_success: '登入成功'
 } 

@@ -1,5 +1,5 @@
 const config = require('../config')
-const controller = require('../app/controller')
+const controller = require('../controller')
 const Router = require('koa-router')
 
 const router = new Router({
@@ -10,7 +10,7 @@ const router = new Router({
 router
   .get('/auth', controller.auth.getAuth) 																	// 获取用户信息
   .put('/auth', controller.auth.putAuth) 																	// 修改用户信息
-  .post('/login', controller.auth.login) 																	// 登录		
+  .post('/signin', controller.auth.signin) 																	// 登录		
 
   .get('/option', controller.option.getOption) 														// 获取网站基本信息
   .put('/option', controller.option.putOption)														// 修改网站信息
@@ -35,10 +35,9 @@ router
 
   // .post('/like', controller.like.postLike) 																// 喜欢文章
 
-  // .get('/link', controller.link.getLinks) 																 // 获取友链列表
-  // .post('/link', controller.link.postLink)																 // 添加友链
-  // .patch('/link/:id', controller.link.patchLink)													 // 修改友链状态
-  // .put('/link/:id', controller.link.putLink)															 // 修改友链
-  // .delete('/link/:id', controller.link.deleteLink)												 // 删除友链
+  .get('/link', controller.link.getLinks) 																 // 获取友链列表
+  .post('/link', controller.link.postLink)																 // 添加友链
+  .put('/link/:id', controller.link.putLink)															 // 修改友链
+  .delete('/link/:id', controller.link.deleteLink)												 // 删除友链
 
 module.exports = router

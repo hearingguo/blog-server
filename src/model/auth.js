@@ -2,9 +2,10 @@
  * 个人信息数据模型
  */
 
-const mongoose = require('../../mongodb').mongoose
+const mongoose = require('../mongodb').mongoose
+const Schema = mongoose.Schema
 
-const optionSchema = new mongoose.Schema({
+const authSchema = new Schema({
 
 	// 头像
 	avatar:	{ 
@@ -33,10 +34,11 @@ const optionSchema = new mongoose.Schema({
   // 密码
   password: { 
     type: String, 
-    default: '' },
+    default: '' 
+  }
 	
 });
 
-const Option = mongoose.model('Auth', optionSchema)
+const Auth = mongoose.model('Auth', authSchema)
 
-module.exports = Option
+module.exports = Auth

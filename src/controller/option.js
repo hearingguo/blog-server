@@ -3,12 +3,12 @@
  */
 
 const Option = require('../model/option')
-const msg = require("../../config/message")
+const msg = require("../config/message")
 
 const {
   handleSuccess,
   handleError
-} = require("../../utils/handle")
+} = require("../utils/handle")
 
 class OptionController {
   // 获取

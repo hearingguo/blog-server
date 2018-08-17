@@ -8,6 +8,7 @@ exports.mongoose = mongoose
 
 // 数据库
 exports.connect = () => {
+
 	let db = mongoose.connection
 
 	// 连接数据库
@@ -15,13 +16,13 @@ exports.connect = () => {
 
 	// 连接错误
 	db.on('error', error => {
-		console.log('数据库连接失败!', error)
+		console.log(`Mongoose connection error:${error}`)
 	})
 
 	// 连接成功
 	db.once('open', () => {
-		console.log('数据库连接成功!')
+		console.log(`Mongoose connection open to${config.MONGODB.uri}`)
 	})
-
+	
 	return mongoose
 }

@@ -3,9 +3,10 @@
 */
 
 const mongoose = require('../../mongodb').mongoose
+const Schema = mongoose.Schema
 
 // 标签模型
-const tagSchema = new mongoose.Schema({
+const tagSchema = new Schema({
 
 	// 标签名称
 	name: { 

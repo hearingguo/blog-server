@@ -2,9 +2,10 @@
  * 网站基本信息数据模型
  */
 
-const mongoose = require('../../mongodb').mongoose
+const mongoose = require('../mongodb').mongoose
+const Schema = mongoose.Schema
 
-const optionSchema = new mongoose.Schema({
+const optionSchema = new Schema({
 
 	// 网站标题
 	title:	{ 
