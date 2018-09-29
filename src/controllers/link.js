@@ -2,7 +2,7 @@
  * 友情链接
  */
 
-const Link = require('../model/link')
+const Link = require('../models/link')
 const msg = require("../config/message")
 
 const {

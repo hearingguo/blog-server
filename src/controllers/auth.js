@@ -2,7 +2,7 @@
  * 用户信息
  */
 
-const Auth = require("../model/auth")
+const Auth = require("../models/auth")
 const msg = require("../config/message")
 
 const {

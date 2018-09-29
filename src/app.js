@@ -1,12 +1,14 @@
 const koa = require('koa')
+const cors = require('koa2-cors')
 const http = require('http')
 const config = require('./config')
 const mongoosePaginate = require('mongoose-paginate')
 
 const mongodb = require('./mongodb')
-const router = require('./route')
+const router = require('./router')
 
 const app = new koa()
+app.use(cors())
 
 // data secer
 mongodb.connect()

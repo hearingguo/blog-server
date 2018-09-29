@@ -2,7 +2,7 @@
  * 网站基本信息
  */
 
-const Option = require('../model/option')
+const Option = require('../models/option')
 const msg = require("../config/message")
 
 const {

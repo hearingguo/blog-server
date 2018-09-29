@@ -21,6 +21,6 @@ const linkSchema = new Schema({
   
 });
 
-const Link = mongoose.model('Option', linkSchema)
+const Link = mongoose.model('Link', linkSchema)
 
 module.exports = Link

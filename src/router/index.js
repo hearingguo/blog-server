@@ -1,19 +1,19 @@
 const config = require('../config')
-const controller = require('../controller')
+const controller = require('../controllers')
 const Router = require('koa-router')
 
 const router = new Router({
-	prefix: config.APP.ROOT_PATH
+  prefix: config.APP.ROOT_PATH
 })
 
 // Api
 router
-  .get('/auth', controller.auth.getAuth) 																	// 获取用户信息
-  .put('/auth', controller.auth.putAuth) 																	// 修改用户信息
-  .post('/signin', controller.auth.signin) 																	// 登录		
+  .get('/auth', controller.auth.getAuth) // 获取用户信息
+  .put('/auth', controller.auth.putAuth) // 修改用户信息
+  .post('/signin', controller.auth.signin) // 登录		
 
-  .get('/option', controller.option.getOption) 														// 获取网站基本信息
-  .put('/option', controller.option.putOption)														// 修改网站信息
+  .get('/option', controller.option.getOption) // 获取网站基本信息
+  .put('/option', controller.option.putOption) // 修改网站信息
 
   // .get('/tag', controller.tag.getTags) 																		// 获取标签
   // .post('/tag', controller.tag.postTag)																		// 添加标签
@@ -35,9 +35,9 @@ router
 
   // .post('/like', controller.like.postLike) 																// 喜欢文章
 
-  .get('/link', controller.link.getLinks) 																 // 获取友链列表
-  .post('/link', controller.link.postLink)																 // 添加友链
-  .put('/link/:id', controller.link.putLink)															 // 修改友链
-  .delete('/link/:id', controller.link.deleteLink)												 // 删除友链
+  .get('/link', controller.link.getLinks) // 获取友链列表
+  .post('/link', controller.link.postLink) // 添加友链
+  .put('/link/:id', controller.link.putLink) // 修改友链
+  .delete('/link/:id', controller.link.deleteLink) // 删除友链
 
 module.exports = router
