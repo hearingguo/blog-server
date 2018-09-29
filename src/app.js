@@ -5,7 +5,7 @@ const config = require('./config')
 const mongoosePaginate = require('mongoose-paginate')
 
 const mongodb = require('./mongodb')
-const router = require('./router')
+const router = require('./routes')
 
 const app = new koa()
 app.use(cors())
@@ -21,6 +21,7 @@ const handler = async (ctx, next) => {
   try {
     await next()
   } catch (err) {
+    console.log(err)
     ctx.response.status = err.statusCode || err.status || 500;
     ctx.response.type = 'html';
     ctx.response.body = '<p>Something wrong, please contact administrator.</p>';
@@ -38,7 +39,7 @@ app.on('error', function(err) {
 });
 
 app.use(handler)
-app.use(main)
+// app.use(main)
 
 
-app.listen(3000)
+app.listen(27017)
