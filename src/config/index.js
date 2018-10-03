@@ -11,3 +11,9 @@ exports.APP = {
 	LIMIT: 20,
 	PORT: 8000
 }
+
+exports.AUTH = {
+	jwtTokenSecret: argv.auth_key || 'blog',
+	defaultUsername: argv.auth_default_username || 'highya',
+	defaultPassword: argv.auth_default_password || '123456'
+}

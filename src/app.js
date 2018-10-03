@@ -7,6 +7,8 @@ const mongodb = require('./mongodb')
 const router = require('./routes')
 const koaBody = require('koa-body')
 
+const initAdmin = require('./middlewares/initAdmin')
+
 const app = new koa()
 
 // data secer
@@ -16,20 +18,26 @@ mongoosePaginate.paginate.options = {
 	limit: config.APP.LIMIT
 }
 
-// const handler = async (ctx, next) => {
-//   try {
-//     await next()
-//   } catch (err) {
-//     ctx.response.status = err.statusCode || err.status || 500
-//     ctx.response.type = 'html'
-//     ctx.response.body = '<p>Something wrong, please contact administrator.</p>'
-//     // ctx.app.emit('error', err, ctx)
-//   }
-// }
+const handler = async (ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    ctx.response.status = err.statusCode || err.status || 500
+    ctx.response.type = 'html'
+    ctx.response.body = '<p>Something wrong, please contact administrator.</p>'
+    // ctx.app.emit('error', err, ctx)
+  }
+}
 
-// app.on('error', function(err) {
-//   console.log('logging error ', err.message)
-// })
+app.on('error', function(err) {
+  console.log('logging error ', err.message)
+})
+
+
+// 初始化管理员账户
+app.use(initAdmin)
+
+
 app.use(cors())
 app.use(koaBody({
   jsoinLimit: '10mb',
@@ -37,8 +45,7 @@ app.use(koaBody({
   textLimit: '10mb'
 }))
 app.use(router.routes())
-
-// app.use(handler)
+app.use(handler)
 
 app.listen(8000, () => {
   console.log('app start 8000')
