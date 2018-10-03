@@ -1,9 +1,9 @@
 const argv = require('yargs').argv
 
 exports.MONGODB = {
-	uri: 'mongodb://127.0.0.1:27017/my_blog',
-	username: argv.db_username || 'DB_username',
-	password: argv.db_password || 'DB_password'
+	uri: 'mongodb://127.0.0.1:27017/blog',
+	username: '',
+	password: ''
 }
 
 exports.APP = {

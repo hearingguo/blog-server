@@ -6,9 +6,6 @@ const router = new Router()
 
 // Api
 const routers = router
-  .get('/', (ctx) => {
-    ctx.body = 'sso;hyyyuoo'
-  }) // 获取用户信息
   .get('/auth', controller.auth.getAuth) // 获取用户信息
   .put('/auth', controller.auth.putAuth) // 修改用户信息
   .post('/signin', controller.auth.signin) // 登录		

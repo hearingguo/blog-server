@@ -1,4 +1,4 @@
-exports.msg_ch = {
+exports.msg_cn = {
   error: '服务器错误',
   invalid_params: '无效的参数',
   get_success: '获取成功',

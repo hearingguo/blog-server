@@ -1,0 +1,4 @@
+{
+  "watch": ["src"],
+  "exec": "node --inspect-brk src/app.js"
+}

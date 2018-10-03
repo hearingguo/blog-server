@@ -20,7 +20,7 @@ exports.connect = () => {
 	})
 
 	// 连接成功
-	db.once('open', () => {
+	db.on('connected', () => {
 		console.log(`Mongoose connection open to ${config.MONGODB.uri}`)
 	})
 	
