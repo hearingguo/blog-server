@@ -33,18 +33,21 @@ app.on('error', function(err) {
   console.log('logging error ', err.message)
 })
 
-
 // 初始化管理员账户
 app.use(initAdmin)
-
-
+// 跨域
 app.use(cors())
+
+// request body setting
 app.use(koaBody({
   jsoinLimit: '10mb',
   formLimit: '10mb',
   textLimit: '10mb'
 }))
+
+// router
 app.use(router.routes())
+
 app.use(handler)
 
 app.listen(8000, () => {

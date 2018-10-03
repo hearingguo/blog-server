@@ -4,6 +4,15 @@
 
 const Auth = require("../models/auth")
 const msg = require("../config/message")
+const crypto = require('crypto')
+
+// md5 编码
+const md5Decode = pwd => {
+  return crypto
+            .createHash('md5')
+            .update(pwd)
+            .digest('hex')
+}
 
 const {
   handleSuccess,
@@ -46,10 +55,11 @@ class AuthController {
                   .findOne({}, '_id username signature avatar password')
                   .catch(err => ctx.throw(500, msg.msg_cn.error))
     if(auth) {
-      if(auth.password !== oldPassword) {
+      if(auth.password !== md5Decode(oldPassword)) {
         handleError({ ctx, message: msg.msg_cn.auth_put_password_fail })
       } else {
         let password = newPassword === '' ? oldPassword : newPassword
+        password = md5Decode(password)
         let _auth = await Auth
                       .findByIdAndUpdate(_id, { _id, avatar, username, name, signature, password }, { new: true })
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
