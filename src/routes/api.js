@@ -13,10 +13,10 @@ const routers = router
   .get('/option', controller.option.getOption) // 获取网站基本信息
   .put('/option', controller.option.putOption) // 修改网站信息
 
-  // .get('/tag', controller.tag.getTags) 																		// 获取标签
-  // .post('/tag', controller.tag.postTag)																		// 添加标签
-  // .put('/tag/:id', controller.tag.putTag)																	// 修改标签
-  // .delete('/tag/:id', controller.tag.deleteTag)														// 删除标签
+  .get('/tag', controller.tag.getTags) 																		// 获取标签
+  .post('/tag', controller.tag.postTag)																		// 添加标签
+  .put('/tag/:id', controller.tag.putTag)																	// 修改标签
+  .delete('/tag/:id', controller.tag.deleteTag)														// 删除标签
 
   // .get('/article', controller.article.getArts) 														// 文章列表
   // .post('/article', controller.article.postArt)														// 添加文章

@@ -16,7 +16,8 @@ const linkSchema = new Schema({
 	// 友情链接用户
 	name:	{ 
 		type: String, 
-    required: true
+    required: true, 
+    validate: /\S+/ 
   },
   
   // 友情链接
