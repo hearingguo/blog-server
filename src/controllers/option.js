@@ -23,11 +23,12 @@ class OptionController {
   // 修改
   static async putOption (ctx) {
     const _id = ctx.request.body._id
+    // 修改数据需要填写id
     const option = await (_id
                     ? Option.findByIdAndUpdate(_id, ctx.request.body, { new: true })
                     : new Option(ctx.request.body).save())
                     .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (option) handleSuccess({ ctx, result: option._id, message: msg.msg_cn.option_put_success })
+    if (option) handleSuccess({ ctx, result: option, message: msg.msg_cn.option_put_success })
     else handleError({ ctx, message: msg.msg_cn.option_put_fail })
   }
 }
