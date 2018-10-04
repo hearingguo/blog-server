@@ -17,3 +17,10 @@ exports.AUTH = {
 	defaultUsername: argv.auth_default_username || 'highya',
 	defaultPassword: argv.auth_default_password || '123456'
 }
+
+exports.OPTION = {
+		defaultTitle: 'highya | blog',
+		defaultSub_title: '口袋里的温度 是会生长爱的土壤',
+		defaultEmail: 'hearingguo@gmail.com',
+		defaultUrl: 'http://www.highya.com/'
+}

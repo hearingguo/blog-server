@@ -19,6 +19,12 @@ const optionSchema = new Schema({
 		required: true
 	},
 
+	// 站点地址
+	url: { 
+		type: String, 
+		required: true 
+	},
+
 	// 关键字
 	keywords: { 
 		type: String 
@@ -27,14 +33,11 @@ const optionSchema = new Schema({
 	// 网站描述
 	description: String,
 
-	// 站点地址
-	url: { 
-		type: String, 
-		required: true 
-	},
-
 	// 邮箱
-	email: String,
+	email: {
+		type: String,
+		required: true
+	},
 
 	// 备案号
 	icp: String,

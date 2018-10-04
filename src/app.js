@@ -8,6 +8,7 @@ const router = require('./routes')
 const koaBody = require('koa-body')
 
 const initAdmin = require('./middlewares/initAdmin')
+const initOption = require('./middlewares/initOption')
 
 const app = new koa()
 
@@ -25,7 +26,7 @@ const handler = async (ctx, next) => {
     ctx.response.status = err.statusCode || err.status || 500
     ctx.response.type = 'html'
     ctx.response.body = '<p>Something wrong, please contact administrator.</p>'
-    // ctx.app.emit('error', err, ctx)
+    ctx.app.emit('error', err, ctx)
   }
 }
 
@@ -35,6 +36,7 @@ app.on('error', function(err) {
 
 // 初始化管理员账户
 app.use(initAdmin)
+app.use(initOption)
 // 跨域
 app.use(cors())
 

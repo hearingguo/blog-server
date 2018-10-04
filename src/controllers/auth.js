@@ -50,22 +50,23 @@ class AuthController {
 
   // 修改用户信息
   static async putAuth (ctx) {
+    // 更改信息 oldPassword 为必填项
     const { _id, avatar, username, name, signature, oldPassword, newPassword } = ctx.request.body
     const auth = await Auth
-                  .findOne({}, '_id username signature avatar password')
+                  .findOne({}, '_id username name signature avatar password')
                   .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if(auth) {
+
+    if(auth) { 
+      // 管理员用户存在
       if(auth.password !== md5Decode(oldPassword)) {
         handleError({ ctx, message: msg.msg_cn.auth_put_password_fail })
-      } else {
-        let password = newPassword === '' ? oldPassword : newPassword
-        password = md5Decode(password)
-        let _auth = await Auth
-                      .findByIdAndUpdate(_id, { _id, avatar, username, name, signature, password }, { new: true })
-                      .catch(err => ctx.throw(500, msg.msg_cn.error))
-        if(_auth) handleSuccess({ ctx, result: auth, message: msg.msg_cn.auth_put_success})
-        else handleError({ ctx, message: msg.msg_cn.auth_put_fail })
       }
+      let password = md5Decode(newPassword === '' ? oldPassword : newPassword)
+      let _auth = await Auth
+                        .findOneAndUpdate(_id, { avatar, username, name, signature, password }, { new: true })
+                        .catch(err => ctx.throw(500, msg.msg_cn.error))
+      if(_auth) handleSuccess({ ctx, result: _auth, message: msg.msg_cn.auth_put_success})
+      else handleError({ ctx, message: msg.msg_cn.auth_put_fail })
     } else handleError({ ctx, message: msg.msg_cn.auth_put_fail })
   }
 }
