@@ -1,5 +1,5 @@
 /**
- * 友情链接
+ * 标签
  */
 const mongoose = require('../mongodb').mongoose
 const Tag = require('../models/tag')
@@ -14,7 +14,7 @@ class TagController {
   // 获取
   static async getTags (ctx) {
 
-    const { current_page = 1, page_size = 10, keyword = '', state = '' } = ctx.query
+    const { current_page = 1, page_size = 10, keyword = '' } = ctx.query
 
     // 过滤条件
 		const options = {
@@ -28,43 +28,43 @@ class TagController {
       name: new RegExp(keyword)
 		}
 
-    const links = await Link
+    const tags = await Tag
                     .paginate(querys, options)
                     .catch(err => ctx.throw(500, msg.msg_cn.error))
 
-    if (links) {
+    if (tags) {
       handleSuccess({
         ctx,
         result: {
           pagination: {
-            total: links.total,
-            current_page: links.page,
-            total_page: links.pages,
-            page_size: links.limit
+            total: tags.total,
+            current_page: tags.page,
+            total_page: tags.pages,
+            page_size: tags.limit
           },
-          list: links.docs
+          list: tags.docs
         },
-        message: msg.msg_cn.option_get_success
+        message: msg.msg_cn.tag_get_success
       })
-    } else handleError({ ctx, message: '获取链接列表失败' })
+    } else handleError({ ctx, message: msg.msg_cn.tag_get_fail })
 
   }
 
   // 添加
   static async postTag (ctx) {
-    const { name, url } = ctx.request.body
+    const { name, description } = ctx.request.body
 
-		const link = await new Link({ name, url })
+		const tag = await new Tag({ name, description })
                     .save()
                     .catch(err => handleError({ ctx, message: msg.msg_cn.error }))
-		if(link) handleSuccess({ ctx, result: link, message: msg.msg_cn.post_success })
-		else handleError({ ctx, message: msg.msg_cn.post_fail })
+		if(tag) handleSuccess({ ctx, result: tag, message: msg.msg_cn.tag_post_success })
+		else handleError({ ctx, message: msg.msg_cn.tag_post_fail })
   }
 
   // 修改
-  static async putLink (ctx) {
+  static async putTag (ctx) {
     const _id = ctx.params.id
-    const { name, url } = ctx.request.body
+    const { name, description } = ctx.request.body
 
 		if (!_id) {
       // 参数无效
@@ -72,15 +72,15 @@ class TagController {
 			return false
     }
 
-		const link = await Link
-                  .findOneAndUpdate(_id, { name, url }, { new: true })
+		const tag = await Tag
+                  .findOneAndUpdate(_id, { name, description }, { new: true })
                   .catch(err => ctx.throw(500, msg.msg_cn.error ))
-		if (link) handleSuccess({ ctx, result: link, message: msg.msg_cn.put_success })
-		else handleError({ ctx, message: msg.msg_cn.put_fail })
+		if (tag) handleSuccess({ ctx, result: tag, message: msg.msg_cn.tag_put_success })
+		else handleError({ ctx, message: msg.msg_cn.tag_put_fail })
   }
 
   // 删除
-  static async deleteLink (ctx) {
+  static async deleteTag (ctx) {
     const _id = ctx.params.id
 
 		if (!_id) {
@@ -88,11 +88,11 @@ class TagController {
 			return false
 		}
 
-		let link = await Link
+		let tag = await Tag
                 .findOneAndRemove(_id)
                 .catch(err => ctx.throw(500, msg.msg_cn.error))
-		if(link) handleSuccess({ ctx, message: msg.msg_cn.delete_success })
-		else handleError({ ctx, message: msg.msg_cn.delete_fail })
+		if(tag) handleSuccess({ ctx, message: msg.msg_cn.tag_delete_success })
+		else handleError({ ctx, message: msg.msg_cn.tag_delete_fail })
    
   }
 }

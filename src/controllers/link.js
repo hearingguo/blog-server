@@ -44,9 +44,9 @@ class LinkController {
           },
           list: links.docs
         },
-        message: msg.msg_cn.option_get_success
+        message: msg.msg_cn.link_get_success
       })
-    } else handleError({ ctx, message: '获取链接列表失败' })
+    } else handleError({ ctx, message: msg.msg_cn.link_get_fail })
 
   }
 
@@ -57,8 +57,8 @@ class LinkController {
 		const link = await new Link({ name, url })
                     .save()
                     .catch(err => handleError({ ctx, message: msg.msg_cn.error }))
-		if(link) handleSuccess({ ctx, result: link, message: msg.msg_cn.post_success })
-		else handleError({ ctx, message: msg.msg_cn.post_fail })
+		if(link) handleSuccess({ ctx, result: link, message: msg.msg_cn.link_post_success })
+		else handleError({ ctx, message: msg.msg_cn.link_post_fail })
   }
 
   // 修改
@@ -75,8 +75,8 @@ class LinkController {
 		const link = await Link
                   .findOneAndUpdate(_id, { name, url }, { new: true })
                   .catch(err => ctx.throw(500, msg.msg_cn.error ))
-		if (link) handleSuccess({ ctx, result: link, message: msg.msg_cn.put_success })
-		else handleError({ ctx, message: msg.msg_cn.put_fail })
+		if (link) handleSuccess({ ctx, result: link, message: msg.msg_cn.link_put_success })
+		else handleError({ ctx, message: msg.msg_cn.link_put_fail })
   }
 
   // 删除
@@ -91,8 +91,8 @@ class LinkController {
 		let link = await Link
                 .findOneAndRemove(_id)
                 .catch(err => ctx.throw(500, msg.msg_cn.error))
-		if(link) handleSuccess({ ctx, message: msg.msg_cn.delete_success })
-		else handleError({ ctx, message: msg.msg_cn.delete_fail })
+		if(link) handleSuccess({ ctx, message: msg.msg_cn.link_delete_success })
+		else handleError({ ctx, message: msg.msg_cn.link_delete_fail })
    
   }
 }

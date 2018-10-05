@@ -2,7 +2,7 @@
 * 标签数据模型
 */
 
-const mongoose = require('../../mongodb').mongoose
+const mongoose = require('../mongodb').mongoose
 const Schema = mongoose.Schema
 
 const autoIncrement = require('mongoose-auto-increment')
@@ -24,9 +24,6 @@ const tagSchema = new Schema({
 	// 标签描述
   description: String,
   
-  // 文章相关数
-  count: Number,
-
   // 发布日期
 	create_at: { 
     type: Date, 

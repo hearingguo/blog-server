@@ -20,5 +20,21 @@ exports.msg_cn = {
   auth_put_password_fail: '原密码错误',
   auth_post_fail_null: '用户名不存在',
   auth_post_fail_error: '密码不正确',
-  auth_post_success: '登入成功'
+  auth_post_success: '登入成功',
+  link_get_success: '获取友链成功',
+  link_get_fail: '获取友链失败',
+  link_post_success: '添加友链成功',
+  link_post_fail: '添加友链失败',
+  link_put_success: '修改友链成功',
+  link_put_fail: '修改友链失败',
+  link_delete_success: '删除友链成功',
+  link_delete_fail: '删除友链失败',
+  tag_get_success: '获取标签成功',
+  tag_get_fail: '获取标签失败',
+  tag_post_success: '添加标签成功',
+  tag_post_fail: '添加标签失败',
+  tag_put_success: '修改标签成功',
+  tag_put_fail: '修改标签失败',
+  tag_delete_success: '删除标签成功',
+  tag_delete_fail: '删除标签失败'
 } 
