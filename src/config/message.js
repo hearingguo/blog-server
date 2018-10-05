@@ -1,6 +1,7 @@
 exports.msg_cn = {
   error: '服务器错误',
   invalid_params: '无效的参数',
+  error_params: '参数不正确',
   get_success: '获取成功',
   get_fail: '获取失败',
   post_success: '添加成功',
@@ -43,6 +44,8 @@ exports.msg_cn = {
   article_post_fail: '添加文章失败',
   article_put_success: '修改文章成功',
   article_put_fail: '修改文章失败',
+  article_patch_success: '修改文章状态成功',
+  article_patch_fail: '修改文章状态失败',
   article_delete_success: '删除文章成功',
   article_delete_fail: '删除文章失败'
 } 
