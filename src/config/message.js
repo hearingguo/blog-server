@@ -36,5 +36,13 @@ exports.msg_cn = {
   tag_put_success: '修改标签成功',
   tag_put_fail: '修改标签失败',
   tag_delete_success: '删除标签成功',
-  tag_delete_fail: '删除标签失败'
+  tag_delete_fail: '删除标签失败',
+  article_get_success: '获取文章成功',
+  article_get_fail: '获取文章失败',
+  article_post_success: '添加文章成功',
+  article_post_fail: '添加文章失败',
+  article_put_success: '修改文章成功',
+  article_put_fail: '修改文章失败',
+  article_delete_success: '删除文章成功',
+  article_delete_fail: '删除文章失败'
 } 

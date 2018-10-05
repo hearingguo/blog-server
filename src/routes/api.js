@@ -18,13 +18,13 @@ const routers = router
   .put('/tag/:id', controller.tag.putTag)																	// 修改标签
   .delete('/tag/:id', controller.tag.deleteTag)														// 删除标签
 
-  // .get('/article', controller.article.getArts) 														// 文章列表
-  // .post('/article', controller.article.postArt)														// 添加文章
-  // .get('/article/:id', controller.article.getArt)													// 文章详情
-  // .patch('/article/:id', controller.article.patchArt)											// 修改文章状态
-  // .put('/article/:id', controller.article.putArt)													// 修改文章
-  // .delete('/article/:id', controller.article.deleteArt)										// 删除文章
-  // .get('/allArticle', controller.article.getAllArts)											// 文章归档
+  .get('/article', controller.article.getArts) 														// 文章列表
+  .post('/article', controller.article.postArt)														// 添加文章
+  .get('/article/:id', controller.article.getArt)													// 文章详情
+  .patch('/article/:id', controller.article.patchArt)											// 修改文章状态
+  .put('/article/:id', controller.article.putArt)													// 修改文章
+  .delete('/article/:id', controller.article.deleteArt)										// 删除文章
+  .get('/allArticle', controller.article.getAllArts)											// 文章归档
 
   // .get('/comment', controller.comments.getComments)												// 评论列表
   // .post('/comment', controller.comments.postComment)											// 添加评论
