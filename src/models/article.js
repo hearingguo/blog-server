@@ -32,11 +32,13 @@ const articleSchema = new mongoose.Schema({
   },
 
   // 标签
+  // ref指向 Tag Schema
   tag: [
     { 
       type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Tag'}
-    ],
+      ref: 'Tag'
+    }
+  ],
 
   // 内容
   content: { 
@@ -53,7 +55,8 @@ const articleSchema = new mongoose.Schema({
   // 文章公开状态： 1 公开 2 私密
   publish: { 
     type: Number, 
-    default: 1 },
+    default: 1 
+  },
 
 	// 缩略图
   thumb: String,

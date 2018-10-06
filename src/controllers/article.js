@@ -16,36 +16,35 @@ class ArticleController {
 
   // 添加文章
   static async postArticle (ctx) {
-    const res = new Article(ctx.request.body)
+
+    const article = await new Article(ctx.request.body)
                     .save()
                     .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (res) {
-      handleSuccess({ ctx, message: msg.msg_cn.article_post_success })
-    } else handleError({ ctx, message: msg.msg_cn.article_put_fail })
+    if (article) handleSuccess({ ctx, message: msg.msg_cn.article_post_success })
+    else handleError({ ctx, message: msg.msg_cn.article_put_fail })
   }
 
    // 删除文章
   static async deleteArticle (ctx) {
     const _id = ctx.params.id
-    
+
     if (!_id) {
       handleError({ ctx, message: msg.msg_cn.invalid_params })
       return false
     }
   
-    const res = await Article
+    const article = await Article
                       .findOneAndRemove(_id)
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (res) {
-      handleSuccess({ ctx, message: msg.msg_cn.article_delete_success })
-    } else handleError({ ctx, message: msg.msg_cn.article_delete_fail })
+    if (article) handleSuccess({ ctx, message: msg.msg_cn.article_delete_success })
+      else handleError({ ctx, message: msg.msg_cn.article_delete_fail })
   }
 
   // 修改文章
   static async putArticle (ctx) {
     const _id = ctx.params.id
     
-    const { title, keyword, tag } = ctx.request.body
+    const { title, keyword } = ctx.request.body
 
     delete ctx.request.body.create_at
     delete ctx.request.body.update_at
@@ -65,9 +64,8 @@ class ArticleController {
     const res = await Article
                       .findOneAndUpdate(_id, ctx.request.body)
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (res) {
-      handleSuccess({ ctx, message: msg.msg_cn.article_put_success })
-    } else handleError({ ctx, message: msg.msg_cn.article_put_fail })
+    if (res) handleSuccess({ ctx, message: msg.msg_cn.article_put_success })
+    else handleError({ ctx, message: msg.msg_cn.article_put_fail })
   }
 
   // 修改文章状态
@@ -94,7 +92,7 @@ class ArticleController {
     else handleError({ ctx, message: msg.msg_cn.article_patch_fail })
   }
 
-  // 根据文章id 获取内容
+  // 获取一篇文章 通过文章id
   static async getArticleProfile (ctx) {
     const _id = ctx.params.id
     
@@ -103,15 +101,14 @@ class ArticleController {
       return false
     }
   
-    const res = await Article
-                      .findById(_id)
+    const article = await Article
+                      .findOne({ id: _id })
                       .populate('tag')
                       .catch(err => ctx.throw(500, msg.msg_cn.error ))
-    if (res) {
-      res.meta.views += 1
-      res.save()
-      handleSuccess({ ctx, result: res, message: msg.msg_cn.article_get_success })
-  
+    if (article) {
+      article.meta.views += 1
+      article.save()
+      handleSuccess({ ctx, result: article, message: msg.msg_cn.article_get_success })
     } else handleError({ ctx, message: msg.msg_cn.article_get_fail })
   }
 
