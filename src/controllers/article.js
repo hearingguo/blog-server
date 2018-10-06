@@ -68,7 +68,7 @@ class ArticleController {
     else handleError({ ctx, message: msg.msg_cn.article_put_fail })
   }
 
-  // 修改文章状态
+  // 修改文章状态 是否私密或者发布
   static async patchArticle (ctx) {
     const _id = ctx.params.id
     
@@ -114,12 +114,106 @@ class ArticleController {
 
   // 获取文章列表
   static async getArticles (ctx) {
-    // 
+    
+    const {
+      current_page = 1,
+      page_size = 10,
+      keyword = '',
+      state = 1,
+      publish = 1,
+      tag,
+      type,
+      date,
+      hot 
+    } = ctx.query
+
+    // 过滤条件
+    const options = {
+      sort: { create_at: -1 },
+      page: Number(current_page),
+      limit: Number(page_size),
+      populate: ['tag'],
+      select: '-content'
+    }
+
+    // 参数
+    const querys = {}
+
+    // 关键词查询
+    if (keyword) {
+      const keywordReg = new RegExp(keyword)
+      querys['$or'] = [
+        { 'title': keywordReg },
+        { 'content': keywordReg },
+        { 'description': keywordReg }
+      ]
+    }
+
+    // 根据 state 查询
+    if (['1', '2'].includes(state)) {
+      querys.state = state
+    }
+  
+    // 根据 publish 查询
+    if (['1', '2'].includes(publish)) {
+      querys.publish = publish
+    }
+  
+    // 按照 type 查询
+    if (['1', '2', '3'].includes(type)) {
+      querys.type = type
+    }
+
+    // 时间查询
+    if (date) {
+      const getDate = new Date(date)
+      if(!Object.is(getDate.toString(), 'Invalid Date')) {
+        querys.create_at = {
+          "$gte": new Date((getDate / 1000 - 60 * 60 * 8) * 1000),
+          "$lt": new Date((getDate / 1000 + 60 * 60 * 16) * 1000)
+        }
+      }
+    }
+  
+    // 按 hot 排行
+    if (hot) {
+      options.sort = {
+        'meta.views': -1,
+        'meta.likes': -1,
+        'meta.comments': -1
+      }
+    }
+  
+    // tag 筛选
+    if (tag) querys.tag = tag
+
+    // 查询
+    const article = await Article
+                      .paginate(querys, options)
+                      .catch(err => ctx.throw(500, msg.msg_cn.error))
+  
+    if (article) {
+      handleSuccess({
+        ctx,
+        result: {
+          pagination: {
+            total: article.total,
+            current_page: article.page,
+            total_page: article.pages,
+            page_size: article.limit
+          },
+          list: article.docs
+        },
+        message: msg.msg_cn.article_get_success
+      })
+    } else handleError({ ctx, message: msg.msg_cn.article_get_fail })
+
   }
 
   // 文章归档
   static async getAllArticles (ctx) {
     // 
+
   }
 }
 
