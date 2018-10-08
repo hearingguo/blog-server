@@ -86,7 +86,7 @@ class ArticleController {
     }
   
     const res = await Article
-                      .findOneAndUpdate(_id, querys)
+                      .findOneAndUpdate({id: _id}, querys)
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) handleSuccess({ ctx, message: msg.msg_cn.article_patch_success })
     else handleError({ ctx, message: msg.msg_cn.article_patch_fail })
@@ -168,9 +168,10 @@ class ArticleController {
     if (date) {
       const getDate = new Date(date)
       if(!Object.is(getDate.toString(), 'Invalid Date')) {
+        // getDate.toString() 如果不是Date实例，则 返回"Invalid Date"
         querys.create_at = {
-          "$gte": new Date((getDate / 1000 - 60 * 60 * 8) * 1000),
-          "$lt": new Date((getDate / 1000 + 60 * 60 * 16) * 1000)
+          "$gte": new Date(getDate),
+          "$lt": new Date((getDate / 1000 + 60 * 60 * 24) * 1000)
         }
       }
     }
@@ -212,8 +213,59 @@ class ArticleController {
 
   // 文章归档
   static async getAllArticles (ctx) {
-    // 
 
+    // 参数
+    const querys = {
+      state: 1,
+      publish: 1
+    }
+
+    // 查询
+    const article = await Article.aggregate([
+                          { 
+                            $match: querys 
+                          },
+                          {
+                            $project: {
+                              year: { $year: '$create_at' },
+                              month: { $month: '$create_at' },
+                              title: 1,
+                              create_at: 1
+                            }
+                          },
+                          {
+                            $group: {
+                              _id: {
+                                year: '$year',
+                                month: '$month'
+                              },
+                              article: {
+                                $push: {
+                                   _id: '$_id',
+                                   title: '$title',
+                                   create_at: '$create_at'
+                                }
+                              }
+                            }
+                          }
+                        ])
+    if (article) {
+      let years = [...new Set(article.map(item => item._id.year))]
+                      .sort((a, b) => b - a)
+                      .map(item => {
+                        let months = []
+                        article.forEach(n => {
+                          if (n._id.year === item) {
+                            months.push({ month: n._id.month, articles: n.article.reverse() })
+                          }
+                        })
+                        return { year: item, months: months.sort((a, b) => b.month - a.month)}
+                      })
+      handleSuccess({ ctx, result: years, message: msg.msg_cn.article_get_success })
+    }
+    else {
+      handleError({ ctx, message: msg.msg_cn.article_get_fail })
+    } 
   }
 }
 
