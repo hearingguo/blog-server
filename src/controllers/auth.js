@@ -63,7 +63,7 @@ class AuthController {
       }
       let password = md5Decode(newPassword === '' ? oldPassword : newPassword)
       let _auth = await Auth
-                        .findOneAndUpdate(_id, { avatar, username, name, signature, password }, { new: true })
+                        .findByIdAndUpdate(_id, { avatar, username, name, signature, password }, { new: true })
                         .catch(err => ctx.throw(500, msg.msg_cn.error))
       if(_auth) handleSuccess({ ctx, result: _auth, message: msg.msg_cn.auth_put_success})
       else handleError({ ctx, message: msg.msg_cn.auth_put_fail })

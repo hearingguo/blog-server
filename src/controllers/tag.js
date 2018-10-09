@@ -73,7 +73,7 @@ class TagController {
     }
 
 		const tag = await Tag
-                  .findOneAndUpdate(_id, { name, description }, { new: true })
+                  .findByIdAndUpdate(_id, { name, description }, { new: true })
                   .catch(err => ctx.throw(500, msg.msg_cn.error ))
 		if (tag) handleSuccess({ ctx, result: tag, message: msg.msg_cn.tag_put_success })
 		else handleError({ ctx, message: msg.msg_cn.tag_put_fail })
@@ -89,7 +89,7 @@ class TagController {
 		}
 
 		let tag = await Tag
-                .findOneAndRemove(_id)
+                .findByIdAndRemove(_id)
                 .catch(err => ctx.throw(500, msg.msg_cn.error))
 		if(tag) handleSuccess({ ctx, message: msg.msg_cn.tag_delete_success })
 		else handleError({ ctx, message: msg.msg_cn.tag_delete_fail })

@@ -73,7 +73,7 @@ class LinkController {
     }
 
 		const link = await Link
-                  .findOneAndUpdate(_id, { name, url }, { new: true })
+                  .findByIdAndUpdate(_id, { name, url }, { new: true })
                   .catch(err => ctx.throw(500, msg.msg_cn.error ))
 		if (link) handleSuccess({ ctx, result: link, message: msg.msg_cn.link_put_success })
 		else handleError({ ctx, message: msg.msg_cn.link_put_fail })
@@ -89,7 +89,7 @@ class LinkController {
 		}
 
 		let link = await Link
-                .findOneAndRemove(_id)
+                .findByIdAndRemove(_id)
                 .catch(err => ctx.throw(500, msg.msg_cn.error))
 		if(link) handleSuccess({ ctx, message: msg.msg_cn.link_delete_success })
 		else handleError({ ctx, message: msg.msg_cn.link_delete_fail })
