@@ -93,7 +93,7 @@ articleSchema.set('toObject', { getters: true })
 articleSchema.plugin(mongoosePaginate)
 articleSchema.plugin(autoIncrement.plugin, {
 	model: 'Article',
-	field: '_id',
+	field: 'id',
 	startAt: 1,
 	incrementBy: 1
 })

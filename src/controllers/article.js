@@ -34,7 +34,7 @@ class ArticleController {
     }
   
     const article = await Article
-                      .findOneAndRemove(_id)
+                      .findByIdAndRemove(_id)
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (article) handleSuccess({ ctx, message: msg.msg_cn.article_delete_success })
       else handleError({ ctx, message: msg.msg_cn.article_delete_fail })
@@ -62,7 +62,7 @@ class ArticleController {
     }
 
     const res = await Article
-                      .findOneAndUpdate(_id, ctx.request.body)
+                      .findByIdAndUpdate(_id, ctx.request.body)
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) handleSuccess({ ctx, message: msg.msg_cn.article_put_success })
     else handleError({ ctx, message: msg.msg_cn.article_put_fail })
@@ -86,7 +86,7 @@ class ArticleController {
     }
   
     const res = await Article
-                      .findOneAndUpdate({id: _id}, querys)
+                      .findByIdAndUpdate(_id, querys)
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) handleSuccess({ ctx, message: msg.msg_cn.article_patch_success })
     else handleError({ ctx, message: msg.msg_cn.article_patch_fail })
@@ -102,7 +102,7 @@ class ArticleController {
     }
   
     const article = await Article
-                      .findOne({ id: _id })
+                      .findById(_id)
                       .populate('tag')
                       .catch(err => ctx.throw(500, msg.msg_cn.error ))
     if (article) {
