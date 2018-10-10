@@ -14,9 +14,17 @@ autoIncrement.initialize(mongoose.connection)
 const commentSchema = new mongoose.Schema({
 
   // user
-	user: {
-		name: { type: String, required: true, validate: /\S+/ },
-		email: { type: String, required: true, validate: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/ }
+	commentator: {
+		name: { 
+      type: String, 
+      required: true, 
+      validate: /\S+/ 
+    },
+		email: { 
+      type: String, 
+      required: true, 
+      validate: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/ 
+    }
 	},
   
 	// content
