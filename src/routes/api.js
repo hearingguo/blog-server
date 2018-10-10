@@ -26,12 +26,12 @@ const routers = router
   .delete('/article/:id', controller.article.deleteArticle)	// 删除文章
   .get('/allArticle', controller.article.getAllArticles) // 文章归档
 
-  // .get('/comment', controller.comments.getComments)											// 评论列表
-  // .post('/comment', controller.comments.postComment)											// 添加评论
-  // .put('/comment/:id', controller.comments.putComment)								    // 通过评论
-  // .delete('/comment/:id', controller.comments.deleteComment)							// 删除评论
+  .get('/comment', controller.comment.getComments)	// 评论列表
+  .post('/comment', controller.comment.postComment) // 添加评论
+  .put('/comment/:id', controller.comment.putComment) // 通过评论
+  .delete('/comment/:id', controller.comment.deleteComment) // 删除评论
 
-  // .post('/like', controller.like.postLike) 															// 喜欢文章
+  // .post('/like', controller.like.postLike) // 喜欢文章
 
   .get('/link', controller.link.getLinks) // 获取友链列表
   .post('/link', controller.link.postLink) // 添加友链
