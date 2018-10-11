@@ -24,8 +24,12 @@ const commentSchema = new mongoose.Schema({
       type: String, 
       required: true, 
       validate: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/ 
+    },
+    site: { 
+      type: String, 
+      validate: /^((https|http):\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/
     }
-	},
+  },
   
 	// content
 	content: { 
@@ -52,6 +56,23 @@ const commentSchema = new mongoose.Schema({
     default: 1 
   },
 
+  // ip
+	ip: { 
+    type: String 
+  },
+
+  addr: {
+    country: {
+      type: String
+    },
+    province: {
+      type: String
+    },
+    city: {
+      type: String
+    }
+  },
+
 	// 发布日期
 	create_at: { 
     type: Date, 
@@ -62,6 +83,7 @@ const commentSchema = new mongoose.Schema({
 	update_at: { 
     type: Date 
   }
+
 })
 
 // 转化成普通 JavaScript 对象
