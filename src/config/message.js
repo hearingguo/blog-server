@@ -47,5 +47,13 @@ exports.msg_cn = {
   article_patch_success: '修改文章状态成功',
   article_patch_fail: '修改文章状态失败',
   article_delete_success: '删除文章成功',
-  article_delete_fail: '删除文章失败'
+  article_delete_fail: '删除文章失败',
+  comment_get_success: '获取评论成功',
+  comment_get_fail: '获取评论失败',
+  comment_post_success: '发布评论成功',
+  comment_post_fail: '发布评论失败',
+  comment_put_success: '修改评论成功',
+  comment_put_fail: '修改评论失败',
+  comment_delete_success: '删除评论成功',
+  comment_delete_fail: '删除评论失败'
 } 
