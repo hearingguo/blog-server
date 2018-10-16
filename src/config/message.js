@@ -1,6 +1,8 @@
 exports.msg_cn = {
   error: '服务器错误',
   invalid_params: '无效的参数',
+  ctrol_success: '操作成功',
+  ctrol_fail: '操作失败',
   error_params: '参数不正确',
   get_success: '获取成功',
   get_fail: '获取失败',

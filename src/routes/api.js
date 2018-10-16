@@ -31,7 +31,7 @@ const routers = router
   .put('/comment/:id', controller.comment.putComment) // 通过评论
   .delete('/comment/:id', controller.comment.deleteComment) // 删除评论
 
-  // .post('/like', controller.like.postLike) // 喜欢文章
+  .post('/like', controller.like.postLike) // 喜欢文章
 
   .get('/link', controller.link.getLinks) // 获取友链列表
   .post('/link', controller.link.postLink) // 添加友链

@@ -1,7 +1,6 @@
 /**
  * 友情链接
  */
-const mongoose = require('../mongodb').mongoose
 const Link = require('../models/link')
 const msg = require("../config/message")
 
