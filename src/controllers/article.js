@@ -17,10 +17,10 @@ class ArticleController {
   // 添加文章
   static async postArticle (ctx) {
 
-    const article = await new Article(ctx.request.body)
+    const res = await new Article(ctx.request.body)
                     .save()
                     .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (article) handleSuccess({ ctx, message: msg.msg_cn.article_post_success })
+    if (res) handleSuccess({ ctx, message: msg.msg_cn.article_post_success })
     else handleError({ ctx, message: msg.msg_cn.article_put_fail })
   }
 
@@ -33,10 +33,10 @@ class ArticleController {
       return false
     }
   
-    const article = await Article
+    const res = await Article
                       .findByIdAndRemove(_id)
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (article) handleSuccess({ ctx, message: msg.msg_cn.article_delete_success })
+    if (res) handleSuccess({ ctx, message: msg.msg_cn.article_delete_success })
       else handleError({ ctx, message: msg.msg_cn.article_delete_fail })
   }
 
@@ -101,14 +101,14 @@ class ArticleController {
       return false
     }
   
-    const article = await Article
+    const res = await Article
                       .findById(_id)
                       .populate('tag')
                       .catch(err => ctx.throw(500, msg.msg_cn.error ))
-    if (article) {
-      article.meta.views += 1
-      article.save()
-      handleSuccess({ ctx, result: article, message: msg.msg_cn.article_get_success })
+    if (res) {
+      res.meta.views += 1
+      res.save()
+      handleSuccess({ ctx, result: res, message: msg.msg_cn.article_get_success })
     } else handleError({ ctx, message: msg.msg_cn.article_get_fail })
   }
 
@@ -189,21 +189,21 @@ class ArticleController {
     if (tag) querys.tag = tag
 
     // 查询
-    const article = await Article
+    const res = await Article
                       .paginate(querys, options)
                       .catch(err => ctx.throw(500, msg.msg_cn.error))
   
-    if (article) {
+    if (res) {
       handleSuccess({
         ctx,
         result: {
           pagination: {
-            total: article.total,
-            current_page: article.page,
-            total_page: article.pages,
-            page_size: article.limit
+            total: res.total,
+            current_page: res.page,
+            total_page: res.pages,
+            page_size: res.limit
           },
-          list: article.docs
+          list: res.docs
         },
         message: msg.msg_cn.article_get_success
       })
@@ -221,7 +221,7 @@ class ArticleController {
     }
 
     // 查询
-    const article = await Article.aggregate([
+    const res = await Article.aggregate([
                           { 
                             $match: querys 
                           },
@@ -249,12 +249,12 @@ class ArticleController {
                             }
                           }
                         ])
-    if (article) {
-      let years = [...new Set(article.map(item => item._id.year))]
+    if (res) {
+      let years = [...new Set(res.map(item => item._id.year))]
                       .sort((a, b) => b - a)
                       .map(item => {
                         let months = []
-                        article.forEach(n => {
+                        res.forEach(n => {
                           if (n._id.year === item) {
                             months.push({ month: n._id.month, articles: n.article.reverse() })
                           }

@@ -5,6 +5,7 @@
 */
 
 const Comment = require('../models/comment')
+const Article = require('../models/article')
 const msg = require("../config/message")
 const geoip = require('geoip-lite')
 
@@ -51,18 +52,45 @@ class CommentController {
                   .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) {
       handleSuccess({ ctx, result: res, message: msg.msg_cn.comment_post_success });
+      // 1、更新相关文章  2、发送邮件给评论者
+
     } else handleError({ ctx, message: msg.msg_cn.comment_post_fail })
 
   }
 
   // 审核通过评论
   static async putComment (ctx) {
+    const _id = ctx.params.id
+		let { ids, state, author } = ctx.request.body
 
+		if (!state || !ids) {
+			ctx.throw(401, msg.msg_cn.invalid_params)
+			return false
+		}
+
+		const res = await Comment
+											.findByIdAndUpdate(_id, ctx.request.body)
+											.catch(err => ctx.throw(500, msg.msg_cn.error))
+		if (res) {
+			handleSuccess({ ctx, message: msg.msg_cn.comment_put_success })
+      // 更新相关文章
+      
+		}
+		else handleError({ ctx, message: msg.msg_cn.comment_put_fail })
   }
 
   // 删除评论
   static async deleteComment (ctx) {
-    
+    const _id = ctx.params.id
+		const res = await Comment
+											.findByIdAndRemove(_id)
+											.catch(err => ctx.throw(500, msg.msg_cn.error))
+		if (res) {
+			handleSuccess({ ctx, message: msg_cn.msg_cn.comment_delete_success })
+      // 更新相关文章
+
+		}
+		else handleError({ ctx, message: msg_cn.msg_cn.comment_delete_fail })
   }
 
 }
