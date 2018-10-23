@@ -18,6 +18,54 @@ class CommentController {
 
   // 获取评论
   static async getComments (ctx) {
+		let { sort = -1, current_page = 1, page_size = 20, keyword = '', post_id, state } = ctx.query
+
+		sort = Number(sort)
+
+		// 过滤条件
+		const options = {
+			sort: { _id: sort },
+			page: Number(current_page),
+			limit: Number(page_size)
+		}
+
+		// 查询参数
+		let querys = {}
+
+		// 查询各种状态
+		if (state && ['0', '1', '2'].includes(state)) {
+			querys.state = state;
+		}
+
+		// 关键词查询
+		if (keyword) {
+			const keywordReg = new RegExp(keyword);
+			querys['$or'] = [
+				{ 'content': keywordReg },
+				{ 'author.name': keywordReg },
+				{ 'author.email': keywordReg }
+			]
+		}
+
+		// 请求评论
+		const comments = await Comment
+													.paginate(querys, options)
+													.catch(err => ctx.throw(500, msg.msg_cn.error))
+		if (comments) {
+			handleSuccess({
+				ctx,
+				message: msg.msg_cn.comment_get_success,
+				result: {
+					pagination: {
+						total: comments.total,
+						current_page: options.page,
+						total_page: comments.pages,
+						per_page: options.limit
+					},
+					data: comments.docs
+				}
+			})
+		} else handleError({ ctx, message: msg.msg_cn.comment_get_fail })
 
   }
 
