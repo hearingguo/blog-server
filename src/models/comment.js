@@ -30,6 +30,18 @@ const commentSchema = new mongoose.Schema({
       validate: /^((https|http):\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/
     }
   },
+
+  // 文章id
+  post_id: {
+    type: Number, 
+    required: true
+  },
+
+  // 父留言  0: 默认留言
+  parent_id: {
+    type: Number,
+    default: 0
+  },
   
 	// content
 	content: { 
@@ -92,7 +104,7 @@ commentSchema.set('toObject', { getters: true })
 // 翻页 + 自增ID插件配置
 commentSchema.plugin(mongoosePaginate)
 commentSchema.plugin(autoIncrement.plugin, {
-	model: 'Article',
+	model: 'Comment',
 	field: 'id',
 	startAt: 1,
 	incrementBy: 1
