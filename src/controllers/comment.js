@@ -44,7 +44,7 @@ const updateArticleCommentsCount = (post_ids = []) => {
 				})
 			} else {
 				counts.forEach(count => {
-					Article.update({ id: count._id }, { $set: { 'meta.comments': count.num_tutorial }})
+					Article.update({ id: count.id }, { $set: { 'meta.comments': count.num_tutorial }})
 					.then(info => { //评论聚合更新成功
 						
 					})
@@ -143,7 +143,6 @@ class CommentController {
     }
     
 		comment.likes = 0
-		comment.commentator = JSON.parse(comment.commentator)
 
 		let permalink = ''
 
