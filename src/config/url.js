@@ -1,0 +1,1 @@
+exports.BLOGHOST = 'http://www.highya.com'

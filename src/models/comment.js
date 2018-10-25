@@ -73,16 +73,9 @@ const commentSchema = new mongoose.Schema({
     type: String 
   },
 
-  addr: {
-    country: {
-      type: String
-    },
-    province: {
-      type: String
-    },
-    city: {
-      type: String
-    }
+  addr: { //country,rangecity
+    type: String,
+    default: ''
   },
 
 	// 发布日期

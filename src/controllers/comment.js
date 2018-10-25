@@ -3,7 +3,7 @@
 *  评论
 * 
 */
-
+const blogInfo =  require("../config/url")
 const Comment = require('../models/comment')
 const Article = require('../models/article')
 const msg = require("../config/message")
@@ -13,6 +13,58 @@ const {
   handleSuccess,
   handleError
 } = require('../utils/handle')
+
+
+// 聚合评论所关联的文章
+const updateArticleCommentsCount = (post_ids = []) => {
+	post_ids = [...new Set(post_ids)].filter(id => !!id)
+	if (post_ids.length) {
+		Comment.aggregate([
+			{ 
+				$match: { 
+					state: 1, 
+					post_id: { $in: post_ids }
+				}
+			},
+			{ 
+				$group: { 
+					_id: "$post_id", 
+					num_tutorial: { $sum : 1 }
+				}
+			}
+		])
+		.then(counts => {
+			if (counts.length === 0) {
+				Article.update({ id: post_ids[0] }, { $set: { 'meta.comments': 0 }})
+				.then(info => {
+
+				})
+				.catch(err => {
+
+				})
+			} else {
+				counts.forEach(count => {
+					Article.update({ id: count._id }, { $set: { 'meta.comments': count.num_tutorial }})
+					.then(info => { //评论聚合更新成功
+						
+					})
+					.catch(err => { //评论聚合更新失败'
+
+					});
+				});
+			}
+		})
+		.catch(err => {
+			console.warn('更新评论count聚合数据前，查询失败', err);
+		})
+	}
+};
+
+// 邮件通知网站主及目标对象
+const sendMailToAdminAndTargetUser = (comment, permalink) => {
+	
+}
+
 
 class CommentController {
 
@@ -87,12 +139,23 @@ class CommentController {
     const ip_location = geoip.lookup(ip)
     
     if (ip_location) {
-			comment.city = ip_location.city,
-			comment.range = ip_location.range,
-			comment.country = ip_location.country
+			comment.addr = `${ip_location.country},${ip_location.range},${ip_location.city}`
     }
     
-    comment.likes = 0
+		comment.likes = 0
+		comment.commentator = JSON.parse(comment.commentator)
+
+		let permalink = ''
+
+		if (Number(comment.post_id) !== 0) {
+			// 永久链接
+			const article = await Article
+											.findOne({ id: comment.post_id }, '_id')
+											.catch(err => ctx.throw(500, msg.msg_cn.error))
+			permalink = `${blogInfo.BLOGHOST}/article/${article._id}`
+		} else {
+			permalink = `${blogInfo.BLOGHOST}/about`
+		}
 
     // 发布评论
 		const res = await new Comment(comment)
@@ -100,7 +163,11 @@ class CommentController {
                   .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) {
       handleSuccess({ ctx, result: res, message: msg.msg_cn.comment_post_success });
-      // 1、更新相关文章  2、发送邮件给评论者
+			// 1、更新相关文章  
+			updateArticleCommentsCount([res.post_id])
+
+			//2、发送邮件给评论者
+			sendMailToAdminAndTargetUser(res, permalink)
 
     } else handleError({ ctx, message: msg.msg_cn.comment_post_fail })
 
