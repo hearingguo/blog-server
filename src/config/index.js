@@ -24,3 +24,8 @@ exports.OPTION = {
 		defaultEmail: 'hearingguo@gmail.com',
 		defaultUrl: 'http://www.highya.com/'
 }
+
+exports.EMAIL = {
+	account: argv.EMAIL_account || 'your_email_account',
+	password: argv.EMAIL_password || 'your_email_password'
+}
