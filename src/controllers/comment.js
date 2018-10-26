@@ -44,7 +44,7 @@ const updateArticleCommentsCount = (post_ids = []) => {
 				})
 			} else {
 				counts.forEach(count => {
-					Article.update({ id: count.id }, { $set: { 'meta.comments': count.num_tutorial }})
+					Article.update({ id: count._id }, { $set: { 'meta.comments': count.num_tutorial }})
 					.then(info => { //评论聚合更新成功
 						
 					})
@@ -81,22 +81,34 @@ class CommentController {
 			limit: Number(page_size)
 		}
 
-		// 查询参数
+		// 排序
+		if ([1, -1].includes(sort)) {
+			options.sort = { _id: sort } // 按时间排序
+		} else if (Object.is(sort, 2)) {  // 按点赞排序
+			options.sort = { likes: -1 }
+		};
+
+		// 查询
 		let querys = {}
 
-		// 查询各种状态
+		// 状态
 		if (state && ['0', '1', '2'].includes(state)) {
 			querys.state = state;
 		}
 
-		// 关键词查询
+		// 关键词
 		if (keyword) {
 			const keywordReg = new RegExp(keyword);
 			querys['$or'] = [
 				{ 'content': keywordReg },
-				{ 'author.name': keywordReg },
-				{ 'author.email': keywordReg }
+				{ 'commentator.name': keywordReg },
+				{ 'commentator.email': keywordReg }
 			]
+		}
+
+		// post-id 过滤
+		if (!Object.is(post_id, undefined)) {
+			querys.post_id = post_id
 		}
 
 		// 请求评论
@@ -117,7 +129,9 @@ class CommentController {
 					data: comments.docs
 				}
 			})
-		} else handleError({ ctx, message: msg.msg_cn.comment_get_fail })
+		} else {
+			handleError({ ctx, message: msg.msg_cn.comment_get_fail })
+		}
 
   }
 
