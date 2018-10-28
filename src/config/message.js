@@ -70,5 +70,7 @@ exports.msg_cn = {
   mail_init_fail: '邮件客户端初始化连接失败，将在一小时后重试',
   mail_init_refuse: '由于未初始化成功，邮件客户端发送被拒绝',
   mail_send_success: '邮件发送成功',
-  mail_send_fail: '邮件发送失败'
+  mail_send_fail: '邮件发送失败',
+  // 查询数据失败
+  query_fail: '更新评论聚合数据前，查询失败'
 } 

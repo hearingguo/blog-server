@@ -7,6 +7,7 @@ const blogInfo =  require("../config/url")
 const Comment = require('../models/comment')
 const Article = require('../models/article')
 const msg = require("../config/message")
+const { sendMail } = require('../utils/email')
 const geoip = require('geoip-lite')
 
 const {
@@ -55,14 +56,29 @@ const updateArticleCommentsCount = (post_ids = []) => {
 			}
 		})
 		.catch(err => {
-			console.warn('更新评论count聚合数据前，查询失败', err);
+			console.warn(msg.msg_cn.query_fail, err);
 		})
 	}
 };
 
 // 邮件通知网站主及目标对象
 const sendMailToAdminAndTargetUser = (comment, permalink) => {
-	
+	sendMail({ // 给博主发送邮件
+		to: 'highyaguo@163.com',
+		subject: '博客有新的留言',
+		text: `来自 ${comment.commentator.name} 的留言：${comment.content}`,
+		html: `<p> 来自 ${comment.commentator.name} 的留言：${comment.content}</p><br><a href="${permalink}" target="_blank">[ 点击查看 ]</a>`
+	});
+	if (!!comment.pid) {
+		Comment.findOne({ id: comment.pid }).then(parentComment => { // 给父联发送邮件
+			sendMail({
+				to: parentComment.commentator.email,
+				subject: '你在highya.me有新的评论回复',
+				text: `来自 ${comment.commentator.name} 的评论回复：${comment.content}`,
+				html: `<p> 来自${comment.commentator.name} 的评论回复：${comment.content}</p><br><a href="${permalink}" target="_blank">[ 点击查看 ]</a>`
+			})
+		})
+	}
 }
 
 
@@ -186,15 +202,17 @@ class CommentController {
 
   }
 
-  // 审核通过评论
+  // 修改评论
   static async putComment (ctx) {
     const _id = ctx.params.id
-		let { ids, state, author } = ctx.request.body
+		let { post_ids, state } = ctx.request.body
 
-		if (!state || !ids) {
+		if (!state || !post_ids) {
 			ctx.throw(401, msg.msg_cn.invalid_params)
 			return false
 		}
+
+		post_ids = Array.of(Number(post_ids))
 
 		const res = await Comment
 											.findByIdAndUpdate(_id, ctx.request.body)
@@ -202,21 +220,22 @@ class CommentController {
 		if (res) {
 			handleSuccess({ ctx, message: msg.msg_cn.comment_put_success })
       // 更新相关文章
-      
+			updateArticleCommentsCount(post_ids)
 		}
 		else handleError({ ctx, message: msg.msg_cn.comment_put_fail })
   }
 
   // 删除评论
   static async deleteComment (ctx) {
-    const _id = ctx.params.id
+		const _id = ctx.params.id
+		const post_ids = Array.of(Number(ctx.query.post_ids))
 		const res = await Comment
 											.findByIdAndRemove(_id)
 											.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (res) {
 			handleSuccess({ ctx, message: msg_cn.msg_cn.comment_delete_success })
       // 更新相关文章
-
+			updateArticleCommentsCount(post_ids)
 		}
 		else handleError({ ctx, message: msg_cn.msg_cn.comment_delete_fail })
   }
