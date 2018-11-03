@@ -1,8 +1,8 @@
 /*  
-*
-*  评论数据模型
-*
-*/
+ *
+ *  评论数据模型
+ *
+ */
 
 const mongoose = require('../mongodb').mongoose
 const autoIncrement = require('mongoose-auto-increment')
@@ -14,26 +14,26 @@ autoIncrement.initialize(mongoose.connection)
 const commentSchema = new mongoose.Schema({
 
   // user
-	commentator: {
-		name: { 
-      type: String, 
-      required: true, 
-      validate: /\S+/ 
+  commentator: {
+    name: {
+      type: String,
+      required: true,
+      validate: /\S+/
     },
-		email: { 
-      type: String, 
-      required: true, 
-      validate: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/ 
+    email: {
+      type: String,
+      required: true,
+      validate: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/
     },
-    site: { 
-      type: String, 
+    site: {
+      type: String,
       validate: /^((https|http):\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/
     }
   },
 
   // 文章id
   post_id: {
-    type: Number, 
+    type: Number,
     required: true
   },
 
@@ -42,35 +42,35 @@ const commentSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  
-	// content
-	content: { 
-    type: String, 
-    required: true, 
-    validate: /\S+/ 
+
+  // content
+  content: {
+    type: String,
+    required: true,
+    validate: /\S+/
   },
 
-	// 被赞数
-	likes: { 
-    type: Number, 
-    default: 0 
+  // 被赞数
+  likes: {
+    type: Number,
+    default: 0
   },
 
-	// 用户ua
-	agent: { 
-    type: String, 
-    validate: /\S+/ 
+  // 用户ua
+  agent: {
+    type: String,
+    validate: /\S+/
   },
 
   // 状态 0待审核 1通过正常 2不通过
-  state: { 
-    type: Number, 
-    default: 1 
+  state: {
+    type: Number,
+    default: 1
   },
 
   // ip
-	ip: { 
-    type: String 
+  ip: {
+    type: String
   },
 
   addr: { //country,rangecity
@@ -78,35 +78,39 @@ const commentSchema = new mongoose.Schema({
     default: ''
   },
 
-	// 发布日期
-	create_at: { 
-    type: Date, 
-    default: Date.now 
+  // 发布日期
+  create_at: {
+    type: Date,
+    default: Date.now
   },
 
-	// 最后修改日期
-	update_at: { 
-    type: Date 
+  // 最后修改日期
+  update_at: {
+    type: Date
   }
 
 })
 
 // 转化成普通 JavaScript 对象
-commentSchema.set('toObject', { getters: true })
+commentSchema.set('toObject', {
+  getters: true
+})
 
 // 翻页 + 自增ID插件配置
 commentSchema.plugin(mongoosePaginate)
 commentSchema.plugin(autoIncrement.plugin, {
-	model: 'Comment',
-	field: 'id',
-	startAt: 1,
-	incrementBy: 1
+  model: 'Comment',
+  field: 'id',
+  startAt: 1,
+  incrementBy: 1
 })
 
 // 时间更新
-commentSchema.pre('findOneAndUpdate', function(next) {
-	this.findOneAndUpdate({}, { update_at: Date.now() })
-	next()
+commentSchema.pre('findOneAndUpdate', function (next) {
+  this.findOneAndUpdate({}, {
+    update_at: Date.now()
+  })
+  next()
 })
 
 // 评论模型

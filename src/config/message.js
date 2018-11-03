@@ -76,4 +76,4 @@ exports.msg_cn = {
   like_post_fail: '点赞失败',
   // 查询数据失败
   query_fail: '更新评论聚合数据前，查询失败'
-} 
+}

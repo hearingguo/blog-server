@@ -8,26 +8,26 @@ const Schema = mongoose.Schema
 const optionSchema = new Schema({
 
 	// 网站标题
-	title:	{ 
-		type: String, 
+	title: {
+		type: String,
 		required: true
 	},
 
 	// 网站副标题
-	sub_title:	{ 
-		type: String, 
+	sub_title: {
+		type: String,
 		required: true
 	},
 
 	// 站点地址
-	url: { 
-		type: String, 
-		required: true 
+	url: {
+		type: String,
+		required: true
 	},
 
 	// 关键字
-	keywords: { 
-		type: String 
+	keywords: {
+		type: String
 	},
 
 	// 网站描述
@@ -43,9 +43,9 @@ const optionSchema = new Schema({
 	icp: String,
 
 	meta: {
-    votes: Number,
-    favs:  Number
-  }
+		votes: Number,
+		favs: Number
+	}
 
 });
 

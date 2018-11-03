@@ -39,9 +39,9 @@ const sendMail = mailOptions => {
   if (!clientIsValid) {
     console.warn(msg.msg_cn.mail_init_refuse)
     return false;
-	}
+  }
 
-	mailOptions.from = '"highya" <highyaguo@163.com>'
+  mailOptions.from = '"highya" <highyaguo@163.com>'
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) return console.warn(msg.msg_cn.mail_send_fail, error)

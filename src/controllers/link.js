@@ -11,25 +11,29 @@ const {
 
 class LinkController {
   // 获取
-  static async getLinks (ctx) {
+  static async getLinks(ctx) {
 
-    const { current_page = 1, page_size = 10, keyword = '', state = '' } = ctx.query
+    const {
+      current_page = 1, page_size = 10, keyword = '', state = ''
+    } = ctx.query
 
     // 过滤条件
-		const options = {
-			sort: { id: 1 },
-			page: Number(current_page),
-			limit: Number(page_size)
+    const options = {
+      sort: {
+        id: 1
+      },
+      page: Number(current_page),
+      limit: Number(page_size)
     }
-    
+
     // 参数
-		const querys = {
+    const querys = {
       name: new RegExp(keyword)
-		}
+    }
 
     const links = await Link
-                    .paginate(querys, options)
-                    .catch(err => ctx.throw(500, msg.msg_cn.error))
+      .paginate(querys, options)
+      .catch(err => ctx.throw(500, msg.msg_cn.error))
 
     if (links) {
       handleSuccess({
@@ -45,54 +49,100 @@ class LinkController {
         },
         message: msg.msg_cn.link_get_success
       })
-    } else handleError({ ctx, message: msg.msg_cn.link_get_fail })
+    } else handleError({
+      ctx,
+      message: msg.msg_cn.link_get_fail
+    })
 
   }
 
   // 添加
-  static async postLink (ctx) {
-    const { name, url } = ctx.request.body
+  static async postLink(ctx) {
+    const {
+      name,
+      url
+    } = ctx.request.body
 
-		const link = await new Link({ name, url })
-                    .save()
-                    .catch(err => handleError({ ctx, message: msg.msg_cn.error }))
-		if(link) handleSuccess({ ctx, result: link, message: msg.msg_cn.link_post_success })
-		else handleError({ ctx, message: msg.msg_cn.link_post_fail })
+    const link = await new Link({
+        name,
+        url
+      })
+      .save()
+      .catch(err => handleError({
+        ctx,
+        message: msg.msg_cn.error
+      }))
+    if (link) handleSuccess({
+      ctx,
+      result: link,
+      message: msg.msg_cn.link_post_success
+    })
+    else handleError({
+      ctx,
+      message: msg.msg_cn.link_post_fail
+    })
   }
 
   // 修改
-  static async putLink (ctx) {
+  static async putLink(ctx) {
     const _id = ctx.params.id
-    const { name, url } = ctx.request.body
+    const {
+      name,
+      url
+    } = ctx.request.body
 
-		if (!_id) {
+    if (!_id) {
       // 参数无效
-			handleError({ ctx, message: msg.msg_cn.invalid_params })
-			return false
+      handleError({
+        ctx,
+        message: msg.msg_cn.invalid_params
+      })
+      return false
     }
 
-		const link = await Link
-                  .findByIdAndUpdate(_id, { name, url }, { new: true })
-                  .catch(err => ctx.throw(500, msg.msg_cn.error ))
-		if (link) handleSuccess({ ctx, result: link, message: msg.msg_cn.link_put_success })
-		else handleError({ ctx, message: msg.msg_cn.link_put_fail })
+    const link = await Link
+      .findByIdAndUpdate(_id, {
+        name,
+        url
+      }, {
+        new: true
+      })
+      .catch(err => ctx.throw(500, msg.msg_cn.error))
+    if (link) handleSuccess({
+      ctx,
+      result: link,
+      message: msg.msg_cn.link_put_success
+    })
+    else handleError({
+      ctx,
+      message: msg.msg_cn.link_put_fail
+    })
   }
 
   // 删除
-  static async deleteLink (ctx) {
+  static async deleteLink(ctx) {
     const _id = ctx.params.id
 
-		if (!_id) {
-			handleError({ ctx, message: msg.msg_cn.invalid_params })
-			return false
-		}
+    if (!_id) {
+      handleError({
+        ctx,
+        message: msg.msg_cn.invalid_params
+      })
+      return false
+    }
 
-		let link = await Link
-                .findByIdAndRemove(_id)
-                .catch(err => ctx.throw(500, msg.msg_cn.error))
-		if(link) handleSuccess({ ctx, message: msg.msg_cn.link_delete_success })
-		else handleError({ ctx, message: msg.msg_cn.link_delete_fail })
-   
+    let link = await Link
+      .findByIdAndRemove(_id)
+      .catch(err => ctx.throw(500, msg.msg_cn.error))
+    if (link) handleSuccess({
+      ctx,
+      message: msg.msg_cn.link_delete_success
+    })
+    else handleError({
+      ctx,
+      message: msg.msg_cn.link_delete_fail
+    })
+
   }
 }
 

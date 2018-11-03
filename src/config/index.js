@@ -19,10 +19,10 @@ exports.AUTH = {
 }
 
 exports.OPTION = {
-		defaultTitle: 'highya | blog',
-		defaultSub_title: '口袋里的温度 是会生长爱的土壤',
-		defaultEmail: 'hearingguo@gmail.com',
-		defaultUrl: 'http://www.highya.com/'
+	defaultTitle: 'highya | blog',
+	defaultSub_title: '口袋里的温度 是会生长爱的土壤',
+	defaultEmail: 'hearingguo@gmail.com',
+	defaultUrl: 'http://www.highya.com/'
 }
 
 exports.EMAIL = {

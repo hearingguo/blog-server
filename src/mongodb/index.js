@@ -12,7 +12,9 @@ exports.connect = () => {
 	let db = mongoose.connection
 
 	// 连接数据库
-	mongoose.connect(config.MONGODB.uri, { useNewUrlParser: true })
+	mongoose.connect(config.MONGODB.uri, {
+		useNewUrlParser: true
+	})
 
 	// 连接错误
 	db.on('error', error => {
@@ -23,6 +25,6 @@ exports.connect = () => {
 	db.on('connected', () => {
 		console.log(`Mongoose connection open to ${config.MONGODB.uri}`)
 	})
-	
+
 	return mongoose
 }

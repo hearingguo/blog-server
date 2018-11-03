@@ -8,19 +8,19 @@ module.exports = async (ctx, next) => {
     const sub_title = config.OPTION.defaultSub_title
     const email = config.OPTION.defaultEmail
     const url = config.OPTION.defaultUrl
-    
+
     let result = await Option
         .find()
         .exec()
         .catch(err => {
             ctx.throw(500, msg.msg_cn.error)
         })
-    if(result.length === 0){
+    if (result.length === 0) {
         let option = new Option({
-          title,
-          sub_title,
-          email,
-          url
+            title,
+            sub_title,
+            email,
+            url
         })
         await option
             .save()
@@ -30,4 +30,4 @@ module.exports = async (ctx, next) => {
         console.log('初始化blog options完成!')
     }
     await next()
-}; 
+};

@@ -16,7 +16,7 @@ const app = new koa()
 mongodb.connect()
 
 mongoosePaginate.paginate.options = {
-	limit: config.APP.LIMIT
+  limit: config.APP.LIMIT
 }
 
 const handler = async (ctx, next) => {
@@ -30,7 +30,7 @@ const handler = async (ctx, next) => {
   }
 }
 
-app.on('error', function(err) {
+app.on('error', function (err) {
   console.log('logging error ', err.message)
 })
 

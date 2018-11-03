@@ -1,18 +1,20 @@
 /* 
-*
-*  评论
-* 
-*/
-const blogInfo =  require("../config/url")
+ *
+ *  评论
+ * 
+ */
+const blogInfo = require("../config/url")
 const Comment = require('../models/comment')
 const Article = require('../models/article')
 const msg = require("../config/message")
-const { sendMail } = require('../utils/email')
+const {
+	sendMail
+} = require('../utils/email')
 const geoip = require('geoip-lite')
 
 const {
-  handleSuccess,
-  handleError
+	handleSuccess,
+	handleError
 } = require('../utils/handle')
 
 
@@ -20,44 +22,59 @@ const {
 const updateArticleCommentsCount = (post_ids = []) => {
 	post_ids = [...new Set(post_ids)].filter(id => !!id)
 	if (post_ids.length) {
-		Comment.aggregate([
-			{ 
-				$match: { 
-					state: 1, 
-					post_id: { $in: post_ids }
+		Comment.aggregate([{
+					$match: {
+						state: 1,
+						post_id: {
+							$in: post_ids
+						}
+					}
+				},
+				{
+					$group: {
+						_id: "$post_id",
+						num_tutorial: {
+							$sum: 1
+						}
+					}
 				}
-			},
-			{ 
-				$group: { 
-					_id: "$post_id", 
-					num_tutorial: { $sum : 1 }
-				}
-			}
-		])
-		.then(counts => {
-			if (counts.length === 0) {
-				Article.update({ id: post_ids[0] }, { $set: { 'meta.comments': 0 }})
-				.then(info => {
+			])
+			.then(counts => {
+				if (counts.length === 0) {
+					Article.update({
+							id: post_ids[0]
+						}, {
+							$set: {
+								'meta.comments': 0
+							}
+						})
+						.then(info => {
 
-				})
-				.catch(err => {
+						})
+						.catch(err => {
 
-				})
-			} else {
-				counts.forEach(count => {
-					Article.update({ id: count._id }, { $set: { 'meta.comments': count.num_tutorial }})
-					.then(info => { //评论聚合更新成功
-						
-					})
-					.catch(err => { //评论聚合更新失败'
+						})
+				} else {
+					counts.forEach(count => {
+						Article.update({
+								id: count._id
+							}, {
+								$set: {
+									'meta.comments': count.num_tutorial
+								}
+							})
+							.then(info => { //评论聚合更新成功
 
+							})
+							.catch(err => { //评论聚合更新失败'
+
+							});
 					});
-				});
-			}
-		})
-		.catch(err => {
-			console.warn(msg.msg_cn.query_fail, err);
-		})
+				}
+			})
+			.catch(err => {
+				console.warn(msg.msg_cn.query_fail, err);
+			})
 	}
 };
 
@@ -70,7 +87,9 @@ const sendMailToAdminAndTargetUser = (comment, permalink) => {
 		html: `<p> 来自 ${comment.commentator.name} 的留言：${comment.content}</p><br><a href="${permalink}" target="_blank">[ 点击查看 ]</a>`
 	});
 	if (!!comment.pid) {
-		Comment.findOne({ id: comment.pid }).then(parentComment => { // 给父联发送邮件
+		Comment.findOne({
+			id: comment.pid
+		}).then(parentComment => { // 给父联发送邮件
 			sendMail({
 				to: parentComment.commentator.email,
 				subject: '你在highya.me有新的评论回复',
@@ -84,24 +103,32 @@ const sendMailToAdminAndTargetUser = (comment, permalink) => {
 
 class CommentController {
 
-  // 获取评论
-  static async getComments (ctx) {
-		let { sort = -1, current_page = 1, page_size = 20, keyword = '', post_id, state } = ctx.query
+	// 获取评论
+	static async getComments(ctx) {
+		let {
+			sort = -1, current_page = 1, page_size = 20, keyword = '', post_id, state
+		} = ctx.query
 
 		sort = Number(sort)
 
 		// 过滤条件
 		const options = {
-			sort: { _id: sort },
+			sort: {
+				_id: sort
+			},
 			page: Number(current_page),
 			limit: Number(page_size)
 		}
 
 		// 排序
 		if ([1, -1].includes(sort)) {
-			options.sort = { _id: sort } // 按时间排序
-		} else if (Object.is(sort, 2)) {  // 按点赞排序
-			options.sort = { likes: -1 }
+			options.sort = {
+				_id: sort
+			} // 按时间排序
+		} else if (Object.is(sort, 2)) { // 按点赞排序
+			options.sort = {
+				likes: -1
+			}
 		};
 
 		// 查询
@@ -115,10 +142,15 @@ class CommentController {
 		// 关键词
 		if (keyword) {
 			const keywordReg = new RegExp(keyword);
-			querys['$or'] = [
-				{ 'content': keywordReg },
-				{ 'commentator.name': keywordReg },
-				{ 'commentator.email': keywordReg }
+			querys['$or'] = [{
+					'content': keywordReg
+				},
+				{
+					'commentator.name': keywordReg
+				},
+				{
+					'commentator.email': keywordReg
+				}
 			]
 		}
 
@@ -129,8 +161,8 @@ class CommentController {
 
 		// 请求评论
 		const comments = await Comment
-													.paginate(querys, options)
-													.catch(err => ctx.throw(500, msg.msg_cn.error))
+			.paginate(querys, options)
+			.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (comments) {
 			handleSuccess({
 				ctx,
@@ -146,32 +178,37 @@ class CommentController {
 				}
 			})
 		} else {
-			handleError({ ctx, message: msg.msg_cn.comment_get_fail })
+			handleError({
+				ctx,
+				message: msg.msg_cn.comment_get_fail
+			})
 		}
 
-  }
+	}
 
-  // 添加评论
-  static async postComment (ctx) {
-    let { body: comment } = ctx.request
-		
+	// 添加评论
+	static async postComment(ctx) {
+		let {
+			body: comment
+		} = ctx.request
+
 		// 获取 ip 以及 地址
-		const ip = (ctx.req.headers['x-forwarded-for'] || 
-		ctx.req.headers['x-real-ip'] || 
-		ctx.req.connection.remoteAddress || 
-		ctx.req.socket.remoteAddress ||
-		ctx.req.connection.socket.remoteAddress ||
-		ctx.req.ip ||
-		ctx.req.ips[0]).replace('::ffff:', '');
+		const ip = (ctx.req.headers['x-forwarded-for'] ||
+			ctx.req.headers['x-real-ip'] ||
+			ctx.req.connection.remoteAddress ||
+			ctx.req.socket.remoteAddress ||
+			ctx.req.connection.socket.remoteAddress ||
+			ctx.req.ip ||
+			ctx.req.ips[0]).replace('::ffff:', '');
 		comment.ip = ip
 		comment.agent = ctx.headers['user-agent'] || comment.agent
-	
-    const ip_location = geoip.lookup(ip)
-    
-    if (ip_location) {
+
+		const ip_location = geoip.lookup(ip)
+
+		if (ip_location) {
 			comment.addr = `${ip_location.country},${ip_location.range},${ip_location.city}`
-    }
-    
+		}
+
 		comment.likes = 0
 
 		let permalink = ''
@@ -179,33 +216,45 @@ class CommentController {
 		if (Number(comment.post_id) !== 0) {
 			// 永久链接
 			const article = await Article
-											.findOne({ id: comment.post_id }, '_id')
-											.catch(err => ctx.throw(500, msg.msg_cn.error))
+				.findOne({
+					id: comment.post_id
+				}, '_id')
+				.catch(err => ctx.throw(500, msg.msg_cn.error))
 			permalink = `${blogInfo.BLOGHOST}/article/${article._id}`
 		} else {
 			permalink = `${blogInfo.BLOGHOST}/about`
 		}
 
-    // 发布评论
+		// 发布评论
 		const res = await new Comment(comment)
-                  .save()
-                  .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (res) {
-      handleSuccess({ ctx, result: res, message: msg.msg_cn.comment_post_success });
+			.save()
+			.catch(err => ctx.throw(500, msg.msg_cn.error))
+		if (res) {
+			handleSuccess({
+				ctx,
+				result: res,
+				message: msg.msg_cn.comment_post_success
+			});
 			// 1、更新相关文章  
 			updateArticleCommentsCount([res.post_id])
 
 			//2、发送邮件给评论者
 			sendMailToAdminAndTargetUser(res, permalink)
 
-    } else handleError({ ctx, message: msg.msg_cn.comment_post_fail })
+		} else handleError({
+			ctx,
+			message: msg.msg_cn.comment_post_fail
+		})
 
-  }
+	}
 
-  // 修改评论
-  static async putComment (ctx) {
-    const _id = ctx.params.id
-		let { post_ids, state } = ctx.request.body
+	// 修改评论
+	static async putComment(ctx) {
+		const _id = ctx.params.id
+		let {
+			post_ids,
+			state
+		} = ctx.request.body
 
 		if (!state || !post_ids) {
 			ctx.throw(401, msg.msg_cn.invalid_params)
@@ -215,30 +264,40 @@ class CommentController {
 		post_ids = Array.of(Number(post_ids))
 
 		const res = await Comment
-											.findByIdAndUpdate(_id, ctx.request.body)
-											.catch(err => ctx.throw(500, msg.msg_cn.error))
+			.findByIdAndUpdate(_id, ctx.request.body)
+			.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (res) {
-			handleSuccess({ ctx, message: msg.msg_cn.comment_put_success })
-      // 更新相关文章
+			handleSuccess({
+				ctx,
+				message: msg.msg_cn.comment_put_success
+			})
+			// 更新相关文章
 			updateArticleCommentsCount(post_ids)
-		}
-		else handleError({ ctx, message: msg.msg_cn.comment_put_fail })
-  }
+		} else handleError({
+			ctx,
+			message: msg.msg_cn.comment_put_fail
+		})
+	}
 
-  // 删除评论
-  static async deleteComment (ctx) {
+	// 删除评论
+	static async deleteComment(ctx) {
 		const _id = ctx.params.id
 		const post_ids = Array.of(Number(ctx.query.post_ids))
 		const res = await Comment
-											.findByIdAndRemove(_id)
-											.catch(err => ctx.throw(500, msg.msg_cn.error))
+			.findByIdAndRemove(_id)
+			.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (res) {
-			handleSuccess({ ctx, message: msg_cn.msg_cn.comment_delete_success })
-      // 更新相关文章
+			handleSuccess({
+				ctx,
+				message: msg_cn.msg_cn.comment_delete_success
+			})
+			// 更新相关文章
 			updateArticleCommentsCount(post_ids)
-		}
-		else handleError({ ctx, message: msg_cn.msg_cn.comment_delete_fail })
-  }
+		} else handleError({
+			ctx,
+			message: msg_cn.msg_cn.comment_delete_fail
+		})
+	}
 
 }
 

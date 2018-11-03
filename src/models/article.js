@@ -1,8 +1,8 @@
 /*  
-*
-*  文章数据模型
-*
-*/
+ *
+ *  文章数据模型
+ *
+ */
 
 const mongoose = require('../mongodb').mongoose
 const autoIncrement = require('mongoose-auto-increment')
@@ -12,96 +12,107 @@ const mongoosePaginate = require('mongoose-paginate')
 autoIncrement.initialize(mongoose.connection)
 
 const articleSchema = new mongoose.Schema({
-  
+
   // 文章标题
-  title: { 
-    type: String, 
-    required: true 
+  title: {
+    type: String,
+    required: true
   },
 
   // 关键字
-  keyword: { 
-    type: String, 
-    required: true 
+  keyword: {
+    type: String,
+    required: true
   },
 
   // 描述
-  descript: { 
-    type: String, 
-    required: false 
+  descript: {
+    type: String,
+    required: false
   },
 
   // 标签
   // ref指向 Tag Schema
-  tag: [
-    { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Tag'
-    }
-  ],
+  tag: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Tag'
+  }],
 
   // 内容
-  content: { 
-    type: String, 
-    required: true 
+  content: {
+    type: String,
+    required: true
   },
 
   // 状态： 1 发布 2 草稿
-  state: { 
-    type: Number, 
-    default: 1 
+  state: {
+    type: Number,
+    default: 1
   },
 
   // 文章公开状态： 1 公开 2 私密
-  publish: { 
-    type: Number, 
-    default: 1 
+  publish: {
+    type: Number,
+    default: 1
   },
 
-	// 缩略图
+  // 缩略图
   thumb: String,
 
   // 文章分类 1 coding 2 thinking 3 note
-  type: { 
-    type: Number 
-  },
-  
-	// 发布日期
-  create_at: { 
-    type: Date, 
-    default: Date.now 
+  type: {
+    type: Number
   },
 
-	// 最后修改日期
-	update_at: { 
-    type: Date, 
-    default: Date.now 
+  // 发布日期
+  create_at: {
+    type: Date,
+    default: Date.now
   },
-  
-	// 其他元信息
-	meta: {
-		views: { type: Number, default: 0 },
-		likes: { type: Number, default: 0 },
-		comments: { type: Number, default: 0 }
-	}
+
+  // 最后修改日期
+  update_at: {
+    type: Date,
+    default: Date.now
+  },
+
+  // 其他元信息
+  meta: {
+    views: {
+      type: Number,
+      default: 0
+    },
+    likes: {
+      type: Number,
+      default: 0
+    },
+    comments: {
+      type: Number,
+      default: 0
+    }
+  }
 })
 
 // 转化成普通 JavaScript 对象
-articleSchema.set('toObject', { getters: true })
+articleSchema.set('toObject', {
+  getters: true
+})
 
 // 翻页 + 自增ID插件配置
 articleSchema.plugin(mongoosePaginate)
 articleSchema.plugin(autoIncrement.plugin, {
-	model: 'Article',
-	field: 'id',
-	startAt: 1,
-	incrementBy: 1
+  model: 'Article',
+  field: 'id',
+  startAt: 1,
+  incrementBy: 1
 })
 
 // 时间更新
-articleSchema.pre('findOneAndUpdate', function(next) {
-	this.findOneAndUpdate({}, { update_at: Date.now() })
-	next()
+articleSchema.pre('findOneAndUpdate', function (next) {
+  this.findOneAndUpdate({}, {
+    update_at: Date.now()
+  })
+  next()
 })
 
 // 文章模型
