@@ -5,7 +5,9 @@
 */
 
 const Article = require('../models/article')
+const msg = require("../config/message")
 const Comment = require('../models/comment')
+
 const {
   handleSuccess,
   handleError
@@ -21,7 +23,7 @@ class LikeController {
       return false
     }
   
-    // type=0 文章 type=1 评论
+    // type -> 0 文章, type -> 1 评论
     const res = await (Number(type) === 0 ? Article : Comment)
                           .findById(_id)
                           .catch(err => ctx.throw(500, msg.msg_cn.error))
@@ -31,9 +33,9 @@ class LikeController {
       const info = await res
                         .save()
                         .catch(err => ctx.throw(500, msg.msg_cn.error))
-      if (info) handleSuccess({ ctx, message: msg.msg_cn.ctrol_success })
-      else handleError({ ctx, message: msg.msg_cn.ctrol_fail })
-    } else handleError({ ctx, message: msg.msg_cn.ctrol_fail })
+      if (info) handleSuccess({ ctx, message: msg.msg_cn.like_post_success })
+      else handleError({ ctx, message: msg.msg_cn.like_post_fail })
+    } else handleError({ ctx, message: msg.msg_cn.like_post_fail })
   }
 }
 
