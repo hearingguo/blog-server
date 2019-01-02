@@ -17,15 +17,15 @@ exports.AUTH = {
 	username: argv.auth_default_username || 'hearingguo@gmail.com',
 	nickname: argv.auth_default_username || 'highya',
 	password: argv.auth_default_password || '123456',
-	signature: argv.auth_default_signature || '口袋的温度 是会生长爱的土壤',
+	signature: argv.auth_default_signature || '口袋的温度 是生长爱的土壤',
 	avatar: argv.auth_default_signature || 'https://avatars3.githubusercontent.com/u/7402309?s=400&u=f2f29b4ec7183ee599defd41d1eb9854a11781c9&v=4'
 }
 
 exports.OPTION = {
-	defaultTitle: 'highya | blog',
-	defaultSub_title: '口袋里的温度 是会生长爱的土壤',
-	defaultEmail: 'hearingguo@gmail.com',
-	defaultUrl: 'http://www.highya.com/'
+	title: 'highya | blog',
+	subtitle: '口袋的温度 是生长爱的土壤',
+	email: 'hearingguo@gmail.com',
+	url: 'http://www.highya.com/'
 }
 
 exports.EMAIL = {

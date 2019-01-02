@@ -14,7 +14,7 @@ const optionSchema = new Schema({
 	},
 
 	// 网站副标题
-	sub_title: {
+	subtitle: {
 		type: String,
 		required: true
 	},

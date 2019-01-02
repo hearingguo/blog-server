@@ -4,10 +4,8 @@ const msg = require("../config/message")
 
 // 初始化网站Options
 module.exports = async (ctx, next) => {
-    const title = config.OPTION.defaultTitle
-    const sub_title = config.OPTION.defaultSub_title
-    const email = config.OPTION.defaultEmail
-    const url = config.OPTION.defaultUrl
+
+    const { title, subtitle, email, url } = config.OPTION
 
     let result = await Option
         .find()
@@ -18,7 +16,7 @@ module.exports = async (ctx, next) => {
     if (result.length === 0) {
         let option = new Option({
             title,
-            sub_title,
+            subtitle,
             email,
             url
         })
