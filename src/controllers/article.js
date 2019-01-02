@@ -43,7 +43,7 @@ class ArticleController {
     }
 
     const res = await Article
-      .findByIdAndRemove(_id)
+      .findOneAndRemove({ _id })
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) handleSuccess({
       ctx,
@@ -86,7 +86,7 @@ class ArticleController {
     }
 
     const res = await Article
-      .findByIdAndUpdate(_id, ctx.request.body)
+      .findOneAndUpdate({ _id }, ctx.request.body)
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) handleSuccess({
       ctx,
@@ -122,7 +122,7 @@ class ArticleController {
     }
 
     const res = await Article
-      .findByIdAndUpdate(_id, querys)
+      .findOneAndUpdate({ _id }, querys)
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) handleSuccess({
       ctx,
@@ -147,7 +147,7 @@ class ArticleController {
     }
 
     const res = await Article
-      .findById(_id)
+      .findOne({ _id })
       .populate('tag')
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) {

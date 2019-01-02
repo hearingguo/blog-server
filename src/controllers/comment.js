@@ -264,7 +264,7 @@ class CommentController {
 		post_ids = Array.of(Number(post_ids))
 
 		const res = await Comment
-			.findByIdAndUpdate(_id, ctx.request.body)
+			.findOneAndUpdate({ _id }, ctx.request.body)
 			.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (res) {
 			handleSuccess({
@@ -284,7 +284,7 @@ class CommentController {
 		const _id = ctx.params.id
 		const post_ids = Array.of(Number(ctx.query.post_ids))
 		const res = await Comment
-			.findByIdAndRemove(_id)
+			.findOneAndRemove({ _id })
 			.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (res) {
 			handleSuccess({

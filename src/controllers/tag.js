@@ -102,7 +102,7 @@ class TagController {
     }
 
     const tag = await Tag
-      .findByIdAndUpdate(_id, {
+      .findOneAndUpdate({ _id }, {
         name,
         description
       }, {
@@ -133,7 +133,7 @@ class TagController {
     }
 
     let tag = await Tag
-      .findByIdAndRemove(_id)
+      .findOneAndRemove({ _id })
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (tag) handleSuccess({
       ctx,

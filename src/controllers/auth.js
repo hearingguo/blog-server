@@ -58,7 +58,7 @@ class AuthController {
   // 获取用户信息
   static async getAuth(ctx) {
     const auth = await Auth
-      .findOne({}, 'avatar username name signature')
+      .findOne({}, 'avatar username nickname signature')
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (auth) handleSuccess({
       ctx,
@@ -78,13 +78,13 @@ class AuthController {
       _id,
       avatar,
       username,
-      name,
+      nickname,
       signature,
       oldPassword,
       newPassword
     } = ctx.request.body
     const auth = await Auth
-      .findOne({}, '_id username name signature avatar password')
+      .findOne({}, '_id username nickname signature avatar password')
       .catch(err => ctx.throw(500, msg.msg_cn.error))
 
     if (auth) {
@@ -97,7 +97,7 @@ class AuthController {
       }
       let password = md5Decode(newPassword === '' ? oldPassword : newPassword)
       let _auth = await Auth
-        .findByIdAndUpdate(_id, {
+        .findOneAndUpdate({ _id }, {
           avatar,
           username,
           name,

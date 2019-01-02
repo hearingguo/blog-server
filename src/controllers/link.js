@@ -101,7 +101,7 @@ class LinkController {
     }
 
     const link = await Link
-      .findByIdAndUpdate(_id, {
+      .findOneAndUpdate({ _id }, {
         name,
         url
       }, {
@@ -132,7 +132,7 @@ class LinkController {
     }
 
     let link = await Link
-      .findByIdAndRemove(_id)
+      .findOneAndRemove({ _id })
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (link) handleSuccess({
       ctx,

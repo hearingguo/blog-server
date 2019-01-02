@@ -5,11 +5,7 @@
  */
 
 const mongoose = require('../mongodb').mongoose
-const autoIncrement = require('mongoose-auto-increment')
 const mongoosePaginate = require('mongoose-paginate')
-
-// 自增ID初始化
-autoIncrement.initialize(mongoose.connection)
 
 const commentSchema = new mongoose.Schema({
 
@@ -96,14 +92,8 @@ commentSchema.set('toObject', {
   getters: true
 })
 
-// 翻页 + 自增ID插件配置
+// 翻页
 commentSchema.plugin(mongoosePaginate)
-commentSchema.plugin(autoIncrement.plugin, {
-  model: 'Comment',
-  field: 'id',
-  startAt: 1,
-  incrementBy: 1
-})
 
 // 时间更新
 commentSchema.pre('findOneAndUpdate', function (next) {

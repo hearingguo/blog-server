@@ -5,11 +5,7 @@
  */
 
 const mongoose = require('../mongodb').mongoose
-const autoIncrement = require('mongoose-auto-increment')
 const mongoosePaginate = require('mongoose-paginate')
-
-// 自增ID初始化
-autoIncrement.initialize(mongoose.connection)
 
 const articleSchema = new mongoose.Schema({
 
@@ -98,14 +94,8 @@ articleSchema.set('toObject', {
   getters: true
 })
 
-// 翻页 + 自增ID插件配置
+// 翻页
 articleSchema.plugin(mongoosePaginate)
-articleSchema.plugin(autoIncrement.plugin, {
-  model: 'Article',
-  field: 'id',
-  startAt: 1,
-  incrementBy: 1
-})
 
 // 时间更新
 articleSchema.pre('findOneAndUpdate', function (next) {

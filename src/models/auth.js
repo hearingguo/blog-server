@@ -20,7 +20,7 @@ const authSchema = new Schema({
   },
 
   // 昵称
-  name: {
+  nickname: {
     type: String,
     default: ''
   },

@@ -31,7 +31,7 @@ class LikeController {
 
     // type -> 0 文章, type -> 1 评论
     const res = await (Number(type) === 0 ? Article : Comment)
-      .findById(_id)
+      .findOne({ _id })
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) {
       if (Number(type) === 0) res.meta.likes += 1

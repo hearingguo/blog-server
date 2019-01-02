@@ -4,12 +4,7 @@
 
 const mongoose = require('../mongodb').mongoose
 const Schema = mongoose.Schema
-
-const autoIncrement = require('mongoose-auto-increment')
 const mongoosePaginate = require('mongoose-paginate')
-
-// 自增ID初始化
-autoIncrement.initialize(mongoose.connection)
 
 // 标签模型
 const tagSchema = new Schema({
@@ -40,12 +35,6 @@ const tagSchema = new Schema({
 
 // 翻页
 tagSchema.plugin(mongoosePaginate)
-tagSchema.plugin(autoIncrement.plugin, {
-  model: 'Link',
-  field: 'id',
-  startAt: 1,
-  incrementBy: 1
-})
 
 // 时间更新
 tagSchema.pre('findOneAndUpdate', function (next) {

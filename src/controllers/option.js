@@ -32,7 +32,7 @@ class OptionController {
     const _id = ctx.request.body._id
     // 修改数据需要填写id
     const option = await (_id ?
-        Option.findByIdAndUpdate(_id, ctx.request.body, {
+        Option.findOneAndUpdate({ _id }, ctx.request.body, {
           new: true
         }) :
         new Option(ctx.request.body).save())
