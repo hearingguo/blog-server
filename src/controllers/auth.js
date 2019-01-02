@@ -100,7 +100,7 @@ class AuthController {
         .findOneAndUpdate({ _id }, {
           avatar,
           username,
-          name,
+          nickname,
           signature,
           password
         }, {
