@@ -9,7 +9,7 @@ const mongoosePaginate = require('mongoose-paginate')
 const linkSchema = new Schema({
 
   // 友情链接用户
-  name: {
+  username: {
     type: String,
     required: true,
     validate: /\S+/
@@ -22,13 +22,13 @@ const linkSchema = new Schema({
   },
 
   // 发布日期
-  create_at: {
+  createDate: {
     type: Date,
     default: Date.now
   },
 
   // 最后修改日期
-  update_at: {
+  updateDate: {
     type: Date
   }
 

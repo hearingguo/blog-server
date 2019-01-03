@@ -4,6 +4,7 @@ exports.msg_cn = {
   ctrol_success: '操作成功',
   ctrol_fail: '操作失败',
   error_params: '参数不正确',
+  post_repeat: '拒绝重复添加哦～',
   // request
   get_success: '获取成功',
   get_fail: '获取失败',

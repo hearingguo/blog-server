@@ -14,22 +14,22 @@ class LinkController {
   static async getLinks(ctx) {
 
     const {
-      current_page = 1, page_size = 10, keyword = '', state = ''
+      cPage = 1, sPage= 10, keyword = '', state = ''
     } = ctx.query
 
     // 过滤条件
     const options = {
       sort: {
-        id: 1
+        date: -1
       },
-      page: Number(current_page),
-      limit: Number(page_size)
+      page: Number(cPage),
+      limit: Number(sPage)
     }
 
-    // 参数
-    const querys = {
-      name: new RegExp(keyword)
-    }
+    // querys
+    const querys = keyword ? {
+      username: new RegExp(keyword)
+    } : {}
 
     const links = await Link
       .paginate(querys, options)
@@ -41,9 +41,9 @@ class LinkController {
         result: {
           pagination: {
             total: links.total,
-            current_page: links.page,
-            total_page: links.pages,
-            page_size: links.limit
+            cPage: links.page,
+            tPage: links.pages,
+            sPage: links.limit
           },
           list: links.docs
         },
@@ -59,12 +59,24 @@ class LinkController {
   // 添加
   static async postLink(ctx) {
     const {
-      name,
+      username,
       url
     } = ctx.request.body
 
+    const oldLink = await Link
+      .findOne({ username })
+      .catch(err => ctx.throw(500, msg.msg_cn.error))
+
+    if (oldLink) {
+      handleError({
+        ctx,
+        message: msg.msg_cn.post_repeat
+      })
+      return
+    }
+
     const link = await new Link({
-        name,
+        username,
         url
       })
       .save()
@@ -87,7 +99,7 @@ class LinkController {
   static async putLink(ctx) {
     const _id = ctx.params.id
     const {
-      name,
+      username,
       url
     } = ctx.request.body
 
@@ -102,7 +114,7 @@ class LinkController {
 
     const link = await Link
       .findOneAndUpdate({ _id }, {
-        name,
+        username,
         url
       }, {
         new: true
