@@ -46,6 +46,15 @@ exports.msg_cn = {
   tag_put_fail: '修改标签失败',
   tag_delete_success: '删除标签成功',
   tag_delete_fail: '删除标签失败',
+  // classify
+  classify_get_success: '获取分类成功',
+  classify_get_fail: '获取分类失败',
+  classify_post_success: '添加分类成功',
+  classify_post_fail: '添加分类失败',
+  classify_put_success: '修改分类成功',
+  classify_put_fail: '修改分类失败',
+  classify_delete_success: '删除分类成功',
+  classify_delete_fail: '删除分类失败',
   // article
   article_get_success: '获取文章成功',
   article_get_fail: '获取文章失败',

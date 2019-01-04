@@ -1,6 +1,7 @@
 /**
  * 友情链接
  */
+
 const Link = require('../models/link')
 const msg = require("../config/message")
 

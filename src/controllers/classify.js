@@ -1,71 +1,73 @@
 /**
- * 标签
+ * 分类
  */
 
-const Tag = require('../models/tag')
+const Classify = require('../models/classify')
 const msg = require("../config/message")
+const { PAGINATION } = require("../config/constent")
 
 const {
   handleSuccess,
   handleError
 } = require("../utils/handle")
 
-class TagController {
+class ClassifyController {
   // 获取
-  static async getTags(ctx) {
+  static async getClassify(ctx) {
 
     const {
-      cPage = 1, sPage = 10, keyword = ''
+      cPage = PAGINATION.CURRENT, sPage = PAGINATION.SIZE, keyword = ''
     } = ctx.query
 
     // 过滤条件
     const options = {
       sort: {
-        id: 1
+        date: -1
       },
       page: Number(cPage),
       limit: Number(sPage)
     }
 
     // 参数
-    const querys = {
-      name: new RegExp(keyword)
-    }
+    // querys
+    const querys = keyword ? {
+      title: new RegExp(keyword)
+    } : {}
 
-    const tags = await Tag
+    const classify = await Classify
       .paginate(querys, options)
       .catch(err => ctx.throw(500, msg.msg_cn.error))
 
-    if (tags) {
+    if (classify) {
       handleSuccess({
         ctx,
         result: {
           pagination: {
-            total: tags.total,
-            cPage: tags.page,
-            total_page: tags.pages,
-            sPage: tags.limit
+            total: classify.total,
+            cPage: classify.page,
+            tPage: classify.pages,
+            sPage: classify.limit
           },
-          list: tags.docs
+          list: classify.docs
         },
-        message: msg.msg_cn.tag_get_success
+        message: msg.msg_cn.classify_get_success
       })
     } else handleError({
       ctx,
-      message: msg.msg_cn.tag_get_fail
+      message: msg.msg_cn.classify_get_fail
     })
 
   }
 
   // 添加
-  static async postTag(ctx) {
+  static async postClassify(ctx) {
     const {
-      name,
+      title,
       description
     } = ctx.request.body
 
-    const tag = await new Tag({
-        name,
+    const classify = await new Classify({
+        title,
         description
       })
       .save()
@@ -73,22 +75,22 @@ class TagController {
         ctx,
         message: msg.msg_cn.error
       }))
-    if (tag) handleSuccess({
+    if (classify) handleSuccess({
       ctx,
-      result: tag,
-      message: msg.msg_cn.tag_post_success
+      result: classify,
+      message: msg.msg_cn.classify_post_success
     })
     else handleError({
       ctx,
-      message: msg.msg_cn.tag_post_fail
+      message: msg.msg_cn.classify_post_fail
     })
   }
 
   // 修改
-  static async putTag(ctx) {
+  static async putClassify(ctx) {
     const _id = ctx.params.id
     const {
-      name,
+      title,
       description
     } = ctx.request.body
 
@@ -101,27 +103,27 @@ class TagController {
       return false
     }
 
-    const tag = await Tag
+    const classify = await Classify
       .findOneAndUpdate({ _id }, {
-        name,
+        title,
         description
       }, {
         new: true
       })
       .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (tag) handleSuccess({
+    if (classify) handleSuccess({
       ctx,
-      result: tag,
-      message: msg.msg_cn.tag_put_success
+      result: classify,
+      message: msg.msg_cn.classify_put_success
     })
     else handleError({
       ctx,
-      message: msg.msg_cn.tag_put_fail
+      message: msg.msg_cn.classify_put_fail
     })
   }
 
   // 删除
-  static async deleteTag(ctx) {
+  static async deleteClassify(ctx) {
     const _id = ctx.params.id
 
     if (!_id) {
@@ -132,19 +134,19 @@ class TagController {
       return false
     }
 
-    let tag = await Tag
+    let classify = await Classify
       .findOneAndRemove({ _id })
       .catch(err => ctx.throw(500, msg.msg_cn.error))
-    if (tag) handleSuccess({
+    if (classify) handleSuccess({
       ctx,
-      message: msg.msg_cn.tag_delete_success
+      message: msg.msg_cn.classify_delete_success
     })
     else handleError({
       ctx,
-      message: msg.msg_cn.tag_delete_fail
+      message: msg.msg_cn.classify_delete_fail
     })
 
   }
 }
 
-module.exports = TagController
+module.exports = ClassifyController

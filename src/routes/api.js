@@ -17,6 +17,11 @@ const routers = router
   .put('/tag/:id', controller.tag.putTag) // 修改标签
   .delete('/tag/:id', controller.tag.deleteTag) // 删除标签
 
+  .get('/classify', controller.classify.getClassify) // 获取分类
+  .post('/classify', controller.classify.postClassify) // 添加分类
+  .put('/classify/:id', controller.classify.putClassify) // 修改分类
+  .delete('/classify/:id', controller.classify.deleteClassify) // 删除分类
+
   .get('/article', controller.article.getArticles) // 文章列表
   .post('/article', controller.article.postArticle) // 添加文章
   .get('/article/:id', controller.article.getArticleProfile) // 文章详情
