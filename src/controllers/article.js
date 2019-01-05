@@ -17,6 +17,28 @@ class ArticleController {
   // 添加文章
   static async postArticle(ctx) {
 
+    const { title, keywords, content } = ctx.request.body
+
+    if (!(title && keywords && content)) {
+      handleError({
+        ctx,
+        message: msg.msg_cn.error_params
+      })
+      return
+    }
+
+    const oldArticle = await Article
+      .findOne({ title })
+      .catch(err => ctx.throw(500, msg.msg_cn.error))
+
+    if (oldArticle) {
+      handleError({
+        ctx,
+        message: msg.msg_cn.post_repeat
+      })
+      return
+    }
+
     const res = await new Article(ctx.request.body)
       .save()
       .catch(err => ctx.throw(500, msg.msg_cn.error))

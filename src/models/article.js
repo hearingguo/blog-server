@@ -21,8 +21,14 @@ const articleSchema = new mongoose.Schema({
     required: true
   },
 
+  // 缩略图
+  thumb: {
+    type: String,
+    required: false
+  },
+
   // 描述
-  descript: {
+  description: {
     type: String,
     required: false
   },
@@ -33,12 +39,12 @@ const articleSchema = new mongoose.Schema({
     required: true
   },
 
-  // 标签
+  // 分类
   // ref指向 Classify Schema
-  classify: [{
+  classify: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Classify'
-  }],
+  },
 
   // 标签
   // ref指向 Tag Schema
@@ -56,16 +62,11 @@ const articleSchema = new mongoose.Schema({
   // 文章公开状态： 1 公开 2 私密
   publish: {
     type: Number,
-    default: 1
+    default: 2
   },
 
   // 缩略图
   thumb: String,
-
-  // 文章分类 1 coding 2 thinking 3 note
-  type: {
-    type: Number
-  },
 
   // 发布日期
   createDate: {

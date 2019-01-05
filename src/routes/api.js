@@ -22,6 +22,11 @@ const routers = router
   .put('/classify/:id', controller.classify.putClassify) // 修改分类
   .delete('/classify/:id', controller.classify.deleteClassify) // 删除分类
 
+  .get('/link', controller.link.getLinks) // 获取友链列表
+  .post('/link', controller.link.postLink) // 添加友链
+  .put('/link/:id', controller.link.putLink) // 修改友链
+  .delete('/link/:id', controller.link.deleteLink) // 删除友链
+
   .get('/article', controller.article.getArticles) // 文章列表
   .post('/article', controller.article.postArticle) // 添加文章
   .get('/article/:id', controller.article.getArticleProfile) // 文章详情
@@ -36,10 +41,5 @@ const routers = router
   .delete('/comment/:id', controller.comment.deleteComment) // 删除评论
 
   .post('/like', controller.like.postLike) // 喜欢文章
-
-  .get('/link', controller.link.getLinks) // 获取友链列表
-  .post('/link', controller.link.postLink) // 添加友链
-  .put('/link/:id', controller.link.putLink) // 修改友链
-  .delete('/link/:id', controller.link.deleteLink) // 删除友链
 
 module.exports = routers
