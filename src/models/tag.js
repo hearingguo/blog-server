@@ -10,7 +10,7 @@ const mongoosePaginate = require('mongoose-paginate')
 const tagSchema = new Schema({
 
   // 标签名称
-  name: {
+  title: {
     type: String,
     required: true,
     validate: /\S+/
@@ -20,13 +20,13 @@ const tagSchema = new Schema({
   description: String,
 
   // 发布日期
-  create_at: {
+  createDate: {
     type: Date,
     default: Date.now
   },
 
   // 最后修改日期
-  update_at: {
+  updateDate: {
     type: Date
   }
 
@@ -39,7 +39,7 @@ tagSchema.plugin(mongoosePaginate)
 // 时间更新
 tagSchema.pre('findOneAndUpdate', function (next) {
   this.findOneAndUpdate({}, {
-    update_at: Date.now()
+    updateDate: Date.now()
   })
   next()
 })

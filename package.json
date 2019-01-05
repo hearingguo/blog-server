@@ -6,6 +6,7 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "http": "0.0.0",
+    "jsonwebtoken": "^8.4.0",
     "koa": "^2.5.2",
     "koa-body": "^4.0.4",
     "koa-bodyparser": "^4.2.1",

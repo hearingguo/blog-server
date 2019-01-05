@@ -27,18 +27,25 @@ const articleSchema = new mongoose.Schema({
     required: false
   },
 
+  // 内容
+  content: {
+    type: String,
+    required: true
+  },
+
+  // 标签
+  // ref指向 Classify Schema
+  classify: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Classify'
+  }],
+
   // 标签
   // ref指向 Tag Schema
   tag: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Tag'
   }],
-
-  // 内容
-  content: {
-    type: String,
-    required: true
-  },
 
   // 状态： 1 发布 2 草稿
   state: {
@@ -61,13 +68,13 @@ const articleSchema = new mongoose.Schema({
   },
 
   // 发布日期
-  create_at: {
+  createDate: {
     type: Date,
     default: Date.now
   },
 
   // 最后修改日期
-  update_at: {
+  updateDate: {
     type: Date,
     default: Date.now
   },
@@ -100,7 +107,7 @@ articleSchema.plugin(mongoosePaginate)
 // 时间更新
 articleSchema.pre('findOneAndUpdate', function (next) {
   this.findOneAndUpdate({}, {
-    update_at: Date.now()
+    updateDate: Date.now()
   })
   next()
 })

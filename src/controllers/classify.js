@@ -3,8 +3,10 @@
  */
 
 const Classify = require('../models/classify')
+const Article = require('../models/article')
 const msg = require("../config/message")
 const { PAGINATION } = require("../config/constent")
+const { authIsVerified } = require('../utils/auth')
 
 const {
   handleSuccess,
@@ -28,7 +30,6 @@ class ClassifyController {
       limit: Number(sPage)
     }
 
-    // 参数
     // querys
     const querys = keyword ? {
       title: new RegExp(keyword)
@@ -39,18 +40,46 @@ class ClassifyController {
       .catch(err => ctx.throw(500, msg.msg_cn.error))
 
     if (classify) {
-      handleSuccess({
-        ctx,
-        result: {
-          pagination: {
-            total: classify.total,
-            cPage: classify.page,
-            tPage: classify.pages,
-            sPage: classify.limit
+      const classifyClone = JSON.parse(JSON.stringify(classify))
+
+      // 查找文章中分类的聚合
+      let $match = {}
+
+      // 非登录用户 只显示已发布的和公开
+      if (!authIsVerified(ctx.request)) $match = { state: 1, publish: 1 }
+
+      const article = await Article.aggregate([
+        { $match },
+        { $unwind: "$classify" },
+        {
+          $group: {
+            _id: "$classify",
+            num_tutorial: { $sum: 1 }
+          }
+        }
+      ])
+      if (article) {
+        classifyClone.docs.forEach((item) => {
+          const finded = article.find(c => String(c._id) === String(item._id))
+          item.count = finded ? finded.num_tutorial : 0
+        })
+
+        handleSuccess({
+          ctx,
+          result: {
+            pagination: {
+              total: classifyClone.total,
+              cPage: classifyClone.page,
+              tPage: classifyClone.pages,
+              sPage: classifyClone.limit
+            },
+            list: classifyClone.docs
           },
-          list: classify.docs
-        },
-        message: msg.msg_cn.classify_get_success
+          message: msg.msg_cn.classify_get_success
+        })
+      } else handleError({
+        ctx,
+        message: msg.msg_cn.classify_get_fail
       })
     } else handleError({
       ctx,
@@ -66,6 +95,18 @@ class ClassifyController {
       description
     } = ctx.request.body
 
+    const oldClassify = await Classify
+    .findOne({ title })
+    .catch(err => ctx.throw(500, msg.msg_cn.error))
+
+    if (oldClassify) {
+      handleError({
+        ctx,
+        message: msg.msg_cn.post_repeat
+      })
+      return
+    }
+
     const classify = await new Classify({
         title,
         description
@@ -75,6 +116,7 @@ class ClassifyController {
         ctx,
         message: msg.msg_cn.error
       }))
+      
     if (classify) handleSuccess({
       ctx,
       result: classify,
