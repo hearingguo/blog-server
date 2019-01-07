@@ -24,7 +24,7 @@ const articleSchema = new mongoose.Schema({
   // 缩略图
   thumb: {
     type: String,
-    required: false
+    required: true
   },
 
   // 描述
@@ -56,7 +56,7 @@ const articleSchema = new mongoose.Schema({
   // 状态： 1 发布 2 草稿
   state: {
     type: Number,
-    default: 1
+    default: 2
   },
 
   // 文章公开状态： 1 公开 2 私密
@@ -66,7 +66,10 @@ const articleSchema = new mongoose.Schema({
   },
 
   // 缩略图
-  thumb: String,
+  thumb: {
+    type: String,
+    required: true
+  },
 
   // 发布日期
   createDate: {

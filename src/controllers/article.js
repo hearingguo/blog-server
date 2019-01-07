@@ -17,9 +17,9 @@ class ArticleController {
   // 添加文章
   static async postArticle(ctx) {
 
-    const { title, keywords, content } = ctx.request.body
-
-    if (!(title && keywords && content)) {
+    const { title } = ctx.request.body
+    
+    if (!title) {
       handleError({
         ctx,
         message: msg.msg_cn.error_params
@@ -41,7 +41,14 @@ class ArticleController {
 
     const res = await new Article(ctx.request.body)
       .save()
-      .catch(err => ctx.throw(500, msg.msg_cn.error))
+      .catch (err => {
+        if (err.name === 'ValidationError') {
+          ctx.throw(500, msg.msg_cn.error_params)
+        } else {
+          ctx.throw(500, msg.msg_cn.error)
+        }
+      })
+      
     if (res) handleSuccess({
       ctx,
       message: msg.msg_cn.article_post_success
