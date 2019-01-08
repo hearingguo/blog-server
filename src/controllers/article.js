@@ -17,9 +17,9 @@ class ArticleController {
   // 添加文章
   static async postArticle(ctx) {
 
-    const { title } = ctx.request.body
+    const { title, tag } = ctx.request.body
     
-    if (!title) {
+    if (!tag.length) {
       handleError({
         ctx,
         message: msg.msg_cn.error_params
@@ -48,7 +48,7 @@ class ArticleController {
           ctx.throw(500, msg.msg_cn.error)
         }
       })
-      
+
     if (res) handleSuccess({
       ctx,
       message: msg.msg_cn.article_post_success
@@ -119,6 +119,7 @@ class ArticleController {
       .catch(err => ctx.throw(500, msg.msg_cn.error))
     if (res) handleSuccess({
       ctx,
+      result: res,
       message: msg.msg_cn.article_put_success
     })
     else handleError({
@@ -179,6 +180,7 @@ class ArticleController {
       .findOne({ _id })
       .populate('tag')
       .catch(err => ctx.throw(500, msg.msg_cn.error))
+      console.log(res)
     if (res) {
       res.meta.views += 1
       res.save()
@@ -197,13 +199,13 @@ class ArticleController {
   static async getArticles(ctx) {
 
     const {
-      current_page = 1,
-        page_size = 10,
+        cPage = 1,
+        sPage = 10,
         keyword = '',
-        state = 1,
-        publish = 1,
+        state,
+        publish,
         tag,
-        type,
+        classify,
         date,
         hot
     } = ctx.query
@@ -211,11 +213,11 @@ class ArticleController {
     // 过滤条件
     const options = {
       sort: {
-        create_at: -1
+        createDate: -1
       },
-      page: Number(current_page),
-      limit: Number(page_size),
-      populate: ['tag'],
+      page: Number(cPage),
+      limit: Number(sPage),
+      populate: ['tag', 'classify'],
       select: '-content'
     }
 
@@ -238,18 +240,13 @@ class ArticleController {
     }
 
     // 根据 state 查询
-    if (['1', '2'].includes(state)) {
+    if (state && ['1', '2'].includes(state)) {
       querys.state = state
     }
 
     // 根据 publish 查询
-    if (['1', '2'].includes(publish)) {
+    if (publish && ['1', '2'].includes(publish)) {
       querys.publish = publish
-    }
-
-    // 按照 type 查询
-    if (['1', '2', '3'].includes(type)) {
-      querys.type = type
     }
 
     // 时间查询
@@ -257,7 +254,7 @@ class ArticleController {
       const getDate = new Date(date)
       if (!Object.is(getDate.toString(), 'Invalid Date')) {
         // getDate.toString() 如果不是Date实例，则 返回"Invalid Date"
-        querys.create_at = {
+        querys.createDate = {
           "$gte": new Date(getDate),
           "$lt": new Date((getDate / 1000 + 60 * 60 * 24) * 1000)
         }
@@ -274,7 +271,10 @@ class ArticleController {
     }
 
     // tag 筛选
-    if (tag) querys.tag = tag
+    if (tag && !(tag.length === 1 && !tag[0])) querys.tag = tag
+
+    // classify 筛选
+    if (classify) querys.classify = classify
 
     // 查询
     const res = await Article
@@ -287,9 +287,9 @@ class ArticleController {
         result: {
           pagination: {
             total: res.total,
-            current_page: res.page,
-            total_page: res.pages,
-            page_size: res.limit
+            cPage: res.page,
+            tPage: res.pages,
+            sPage: res.limit
           },
           list: res.docs
         },

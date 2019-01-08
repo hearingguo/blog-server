@@ -24,7 +24,7 @@ const articleSchema = new mongoose.Schema({
   // 缩略图
   thumb: {
     type: String,
-    required: true
+    required: false
   },
 
   // 描述
@@ -63,12 +63,6 @@ const articleSchema = new mongoose.Schema({
   publish: {
     type: Number,
     default: 2
-  },
-
-  // 缩略图
-  thumb: {
-    type: String,
-    required: true
   },
 
   // 发布日期
