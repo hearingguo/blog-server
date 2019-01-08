@@ -106,7 +106,7 @@ class CommentController {
 	// 获取评论
 	static async getComments(ctx) {
 		let {
-			sort = -1, current_page = 1, page_size = 20, keyword = '', post_id, state
+			sort = -1, cPage = 1, sPage = 20, keyword = '', postId, state
 		} = ctx.query
 
 		sort = Number(sort)
@@ -116,8 +116,8 @@ class CommentController {
 			sort: {
 				_id: sort
 			},
-			page: Number(current_page),
-			limit: Number(page_size)
+			page: Number(cPage),
+			limit: Number(sPage)
 		}
 
 		// 排序
@@ -155,8 +155,8 @@ class CommentController {
 		}
 
 		// post-id 过滤
-		if (!Object.is(post_id, undefined)) {
-			querys.post_id = post_id
+		if (!Object.is(postId, undefined)) {
+			querys.postId = postId
 		}
 
 		// 请求评论
@@ -170,9 +170,9 @@ class CommentController {
 				result: {
 					pagination: {
 						total: comments.total,
-						current_page: options.page,
-						total_page: comments.pages,
-						per_page: options.limit
+						cPage: options.page,
+						tPage: comments.pages,
+						sPage: options.limit
 					},
 					data: comments.docs
 				}
@@ -213,11 +213,11 @@ class CommentController {
 
 		let permalink = ''
 
-		if (Number(comment.post_id) !== 0) {
+		if (Number(comment.postId) !== 0) {
 			// 永久链接
 			const article = await Article
 				.findOne({
-					id: comment.post_id
+					id: comment.postId
 				}, '_id')
 				.catch(err => ctx.throw(500, msg.msg_cn.error))
 			permalink = `${blogInfo.BLOGHOST}/article/${article._id}`
@@ -236,7 +236,7 @@ class CommentController {
 				message: msg.msg_cn.comment_post_success
 			});
 			// 1、更新相关文章  
-			updateArticleCommentsCount([res.post_id])
+			updateArticleCommentsCount([res.postId])
 
 			//2、发送邮件给评论者
 			sendMailToAdminAndTargetUser(res, permalink)
@@ -252,16 +252,16 @@ class CommentController {
 	static async putComment(ctx) {
 		const _id = ctx.params.id
 		let {
-			post_ids,
+			postIds,
 			state
 		} = ctx.request.body
 
-		if (!state || !post_ids) {
+		if (!state || !postIds) {
 			ctx.throw(401, msg.msg_cn.invalid_params)
 			return false
 		}
 
-		post_ids = Array.of(Number(post_ids))
+		postIds = Array.of(Number(postIds))
 
 		const res = await Comment
 			.findOneAndUpdate({ _id }, ctx.request.body)
@@ -272,7 +272,7 @@ class CommentController {
 				message: msg.msg_cn.comment_put_success
 			})
 			// 更新相关文章
-			updateArticleCommentsCount(post_ids)
+			updateArticleCommentsCount(postIds)
 		} else handleError({
 			ctx,
 			message: msg.msg_cn.comment_put_fail
@@ -282,7 +282,7 @@ class CommentController {
 	// 删除评论
 	static async deleteComment(ctx) {
 		const _id = ctx.params.id
-		const post_ids = Array.of(Number(ctx.query.post_ids))
+		const postIds = Array.of(Number(ctx.query.postIds))
 		const res = await Comment
 			.findOneAndRemove({ _id })
 			.catch(err => ctx.throw(500, msg.msg_cn.error))
@@ -292,7 +292,7 @@ class CommentController {
 				message: msg_cn.msg_cn.comment_delete_success
 			})
 			// 更新相关文章
-			updateArticleCommentsCount(post_ids)
+			updateArticleCommentsCount(postIds)
 		} else handleError({
 			ctx,
 			message: msg_cn.msg_cn.comment_delete_fail

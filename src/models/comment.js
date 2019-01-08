@@ -28,14 +28,14 @@ const commentSchema = new mongoose.Schema({
   },
 
   // 文章id
-  post_id: {
-    type: Number,
+  postId: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true
   },
 
   // 父留言  0: 默认留言
-  parent_id: {
-    type: Number,
+  parentId: {
+    type: mongoose.Schema.Types.ObjectId,
     default: 0
   },
 
@@ -69,19 +69,20 @@ const commentSchema = new mongoose.Schema({
     type: String
   },
 
-  addr: { //country,rangecity
+  //country,rangecity
+  addr: { 
     type: String,
     default: ''
   },
 
   // 发布日期
-  create_at: {
+  createDate: {
     type: Date,
     default: Date.now
   },
 
   // 最后修改日期
-  update_at: {
+  updateDate: {
     type: Date
   }
 
@@ -98,7 +99,7 @@ commentSchema.plugin(mongoosePaginate)
 // 时间更新
 commentSchema.pre('findOneAndUpdate', function (next) {
   this.findOneAndUpdate({}, {
-    update_at: Date.now()
+    updateDate: Date.now()
   })
   next()
 })
