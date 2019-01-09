@@ -198,23 +198,11 @@ class ArticleController {
   // 获取文章列表
   static async getArticles(ctx) {
 
-    const {
-        cPage = 1,
-        sPage = 10,
-        keyword = '',
-        state,
-        publish,
-        tag,
-        classify,
-        date,
-        hot
-    } = ctx.query
+    let { cPage = 1, sPage = 10, keyword = '', state, publish, tag, classify, date, hot } = ctx.query
 
     // 过滤条件
     const options = {
-      sort: {
-        createDate: -1
-      },
+      sort: { createDate: -1 },
       page: Number(cPage),
       limit: Number(sPage),
       populate: ['tag', 'classify'],
@@ -255,8 +243,8 @@ class ArticleController {
       if (!Object.is(getDate.toString(), 'Invalid Date')) {
         // getDate.toString() 如果不是Date实例，则 返回"Invalid Date"
         querys.createDate = {
-          "$gte": new Date(getDate),
-          "$lt": new Date((getDate / 1000 + 60 * 60 * 24) * 1000)
+          '$gte': new Date(getDate),
+          '$lt': new Date((getDate / 1000 + 60 * 60 * 24) * 1000)
         }
       }
     }
@@ -271,7 +259,14 @@ class ArticleController {
     }
 
     // tag 筛选
-    if (tag && !(tag.length === 1 && !tag[0])) querys.tag = tag
+    if (tag){
+      tag = JSON.parse(tag)
+      if(!(tag.length === 1 && !tag[0])) {
+        querys.tag = {
+          '$all': tag
+        }
+      }
+    }
 
     // classify 筛选
     if (classify) querys.classify = classify

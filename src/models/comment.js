@@ -35,8 +35,8 @@ const commentSchema = new mongoose.Schema({
 
   // 父留言  0: 默认留言
   parentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: 0
+    type: String,
+    default: '0'
   },
 
   // content

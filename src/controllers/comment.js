@@ -17,22 +17,21 @@ const {
 	handleError
 } = require('../utils/handle')
 
-
 // 聚合评论所关联的文章
-const updateArticleCommentsCount = (post_ids = []) => {
-	post_ids = [...new Set(post_ids)].filter(id => !!id)
-	if (post_ids.length) {
+const updateArticleCommentsCount = (postIds = []) => {
+	postIds = [...new Set(postIds)].filter(id => !!id)
+	if (postIds.length) {
 		Comment.aggregate([{
 					$match: {
 						state: 1,
-						post_id: {
-							$in: post_ids
+						postId: {
+							$in: postIds
 						}
 					}
 				},
 				{
 					$group: {
-						_id: "$post_id",
+						_id: "$postId",
 						num_tutorial: {
 							$sum: 1
 						}
@@ -42,7 +41,7 @@ const updateArticleCommentsCount = (post_ids = []) => {
 			.then(counts => {
 				if (counts.length === 0) {
 					Article.update({
-							id: post_ids[0]
+							id: postIds[0]
 						}, {
 							$set: {
 								'meta.comments': 0
@@ -170,27 +169,22 @@ class CommentController {
 				result: {
 					pagination: {
 						total: comments.total,
-						cPage: options.page,
-						tPage: comments.pages,
-						sPage: options.limit
+            cPage: comments.page,
+            tPage: comments.pages,
+            sPage: comments.limit
 					},
-					data: comments.docs
+					list: comments.docs
 				}
 			})
 		} else {
-			handleError({
-				ctx,
-				message: msg.msg_cn.comment_get_fail
-			})
+			handleError({ ctx, message: msg.msg_cn.comment_get_fail })
 		}
 
 	}
 
 	// 添加评论
 	static async postComment(ctx) {
-		let {
-			body: comment
-		} = ctx.request
+		let { body: comment } = ctx.request
 
 		// 获取 ip 以及 地址
 		const ip = (ctx.req.headers['x-forwarded-for'] ||
@@ -210,15 +204,12 @@ class CommentController {
 		}
 
 		comment.likes = 0
-
 		let permalink = ''
 
 		if (Number(comment.postId) !== 0) {
 			// 永久链接
 			const article = await Article
-				.findOne({
-					id: comment.postId
-				}, '_id')
+				.findOne({ id: comment.postId }, '_id')
 				.catch(err => ctx.throw(500, msg.msg_cn.error))
 			permalink = `${blogInfo.BLOGHOST}/article/${article._id}`
 		} else {
@@ -230,31 +221,18 @@ class CommentController {
 			.save()
 			.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (res) {
-			handleSuccess({
-				ctx,
-				result: res,
-				message: msg.msg_cn.comment_post_success
-			});
+			handleSuccess({ ctx, result: res, message: msg.msg_cn.comment_post_success });
 			// 1、更新相关文章  
 			updateArticleCommentsCount([res.postId])
-
 			//2、发送邮件给评论者
 			sendMailToAdminAndTargetUser(res, permalink)
-
-		} else handleError({
-			ctx,
-			message: msg.msg_cn.comment_post_fail
-		})
-
+		} else handleError({ ctx, message: msg.msg_cn.comment_post_fail})
 	}
 
 	// 修改评论
 	static async putComment(ctx) {
 		const _id = ctx.params.id
-		let {
-			postIds,
-			state
-		} = ctx.request.body
+		let { postIds, state } = ctx.request.body
 
 		if (!state || !postIds) {
 			ctx.throw(401, msg.msg_cn.invalid_params)
@@ -267,16 +245,10 @@ class CommentController {
 			.findOneAndUpdate({ _id }, ctx.request.body)
 			.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (res) {
-			handleSuccess({
-				ctx,
-				message: msg.msg_cn.comment_put_success
-			})
+			handleSuccess({ ctx, message: msg.msg_cn.comment_put_success })
 			// 更新相关文章
 			updateArticleCommentsCount(postIds)
-		} else handleError({
-			ctx,
-			message: msg.msg_cn.comment_put_fail
-		})
+		} else handleError({ ctx, message: msg.msg_cn.comment_put_fail })
 	}
 
 	// 删除评论
@@ -287,18 +259,11 @@ class CommentController {
 			.findOneAndRemove({ _id })
 			.catch(err => ctx.throw(500, msg.msg_cn.error))
 		if (res) {
-			handleSuccess({
-				ctx,
-				message: msg_cn.msg_cn.comment_delete_success
-			})
+			handleSuccess({ ctx, message: msg_cn.msg_cn.comment_delete_success })
 			// 更新相关文章
 			updateArticleCommentsCount(postIds)
-		} else handleError({
-			ctx,
-			message: msg_cn.msg_cn.comment_delete_fail
-		})
+		} else handleError({ ctx, message: msg_cn.msg_cn.comment_delete_fail })
 	}
-
 }
 
 module.exports = CommentController
