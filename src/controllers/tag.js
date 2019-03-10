@@ -18,7 +18,7 @@ class TagController {
   static async getTags(ctx) {
 
     const {
-      cPage = PAGINATION.CURRENT, sPage = PAGINATION.SIZE, keyword = ''
+      page = PAGINATION.CURRENT, limit = PAGINATION.SIZE, keyword = ''
     } = ctx.query
 
     // 过滤条件
@@ -26,8 +26,8 @@ class TagController {
       sort: {
         date: -1
       },
-      page: Number(cPage),
-      limit: Number(sPage)
+      page: Number(page),
+      limit: Number(limit)
     }
 
     // querys
@@ -69,9 +69,9 @@ class TagController {
           result: {
             pagination: {
               total: tagClone.total,
-              cPage: tagClone.page,
+              page: tagClone.page,
               total_page: tagClone.pages,
-              sPage: tagClone.limit
+              limit: tagClone.limit
             },
             list: tagClone.docs
           },

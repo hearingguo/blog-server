@@ -198,13 +198,13 @@ class ArticleController {
   // 获取文章列表
   static async getArticles(ctx) {
 
-    let { cPage = 1, sPage = 10, keyword = '', state, publish, tag, classify, date, hot } = ctx.query
+    let { page = 1, limit = 10, keyword = '', state, publish, tag, classify, date, hot } = ctx.query
 
     // 过滤条件
     const options = {
       sort: { createDate: -1 },
-      page: Number(cPage),
-      limit: Number(sPage),
+      page: Number(page),
+      limit: Number(limit),
       populate: ['tag', 'classify'],
       select: '-content'
     }
@@ -282,9 +282,8 @@ class ArticleController {
         result: {
           pagination: {
             total: res.total,
-            cPage: res.page,
-            tPage: res.pages,
-            sPage: res.limit
+            page: res.page,
+            limit: res.limit
           },
           list: res.docs
         },

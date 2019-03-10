@@ -16,6 +16,13 @@ const ClassifySchema = new Schema({
     validate: /\S+/
   },
 
+  // 名称
+  name: {
+    type: String,
+    required: true,
+    validate: /\S+/
+  },
+
   // 分类描述
   description: String,
 

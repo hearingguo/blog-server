@@ -18,7 +18,7 @@ class ClassifyController {
   static async getClassify(ctx) {
 
     const {
-      cPage = PAGINATION.CURRENT, sPage = PAGINATION.SIZE, keyword = ''
+      page = PAGINATION.CURRENT, limit = PAGINATION.SIZE, keyword = ''
     } = ctx.query
 
     // 过滤条件
@@ -26,8 +26,8 @@ class ClassifyController {
       sort: {
         date: -1
       },
-      page: Number(cPage),
-      limit: Number(sPage)
+      page: Number(page),
+      limit: Number(limit)
     }
 
     // querys
@@ -69,9 +69,8 @@ class ClassifyController {
           result: {
             pagination: {
               total: classifyClone.total,
-              cPage: classifyClone.page,
-              tPage: classifyClone.pages,
-              sPage: classifyClone.limit
+              page: classifyClone.page,
+              limit: classifyClone.limit
             },
             list: classifyClone.docs
           },

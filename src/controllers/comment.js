@@ -105,7 +105,7 @@ class CommentController {
 	// 获取评论
 	static async getComments(ctx) {
 		let {
-			sort = -1, cPage = 1, sPage = 20, keyword = '', postId, state
+			sort = -1, page = 1, limit = 20, keyword = '', postId, state
 		} = ctx.query
 
 		sort = Number(sort)
@@ -115,8 +115,8 @@ class CommentController {
 			sort: {
 				_id: sort
 			},
-			page: Number(cPage),
-			limit: Number(sPage)
+			page: Number(page),
+			limit: Number(limit)
 		}
 
 		// 排序
@@ -169,9 +169,9 @@ class CommentController {
 				result: {
 					pagination: {
 						total: comments.total,
-            cPage: comments.page,
+            page: comments.page,
             tPage: comments.pages,
-            sPage: comments.limit
+            limit: comments.limit
 					},
 					list: comments.docs
 				}

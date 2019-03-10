@@ -15,7 +15,7 @@ class LinkController {
   static async getLinks(ctx) {
 
     const {
-      cPage = 1, sPage= 10, keyword = '', state = ''
+      page = 1, limit= 10, keyword = '', state = ''
     } = ctx.query
 
     // 过滤条件
@@ -23,13 +23,13 @@ class LinkController {
       sort: {
         date: -1
       },
-      page: Number(cPage),
-      limit: Number(sPage)
+      page: Number(page),
+      limit: Number(limit)
     }
 
     // querys
     const querys = keyword ? {
-      username: new RegExp(keyword)
+      name: new RegExp(keyword)
     } : {}
 
     const links = await Link
@@ -42,9 +42,8 @@ class LinkController {
         result: {
           pagination: {
             total: links.total,
-            cPage: links.page,
-            tPage: links.pages,
-            sPage: links.limit
+            page: links.page,
+            limit: links.limit
           },
           list: links.docs
         },
@@ -60,12 +59,12 @@ class LinkController {
   // 添加
   static async postLink(ctx) {
     const {
-      username,
+      name,
       url
     } = ctx.request.body
 
     const oldLink = await Link
-      .findOne({ username })
+      .findOne({ name })
       .catch(err => ctx.throw(500, msg.msg_cn.error))
 
     if (oldLink) {
@@ -77,14 +76,14 @@ class LinkController {
     }
 
     const link = await new Link({
-        username,
+        name,
         url
       })
       .save()
-      .catch(err => handleError({
-        ctx,
-        message: msg.msg_cn.error
-      }))
+      // .catch(err => handleError({
+      //   ctx,
+      //   message: msg.msg_cn.error
+      // }))
     if (link) handleSuccess({
       ctx,
       result: link,
@@ -100,7 +99,7 @@ class LinkController {
   static async putLink(ctx) {
     const _id = ctx.params.id
     const {
-      username,
+      name,
       url
     } = ctx.request.body
 
@@ -115,7 +114,7 @@ class LinkController {
 
     const link = await Link
       .findOneAndUpdate({ _id }, {
-        username,
+        name,
         url
       }, {
         new: true

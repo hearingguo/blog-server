@@ -9,7 +9,7 @@ const mongoosePaginate = require('mongoose-paginate')
 const linkSchema = new Schema({
 
   // 友情链接用户
-  username: {
+  name: {
     type: String,
     required: true,
     validate: /\S+/
