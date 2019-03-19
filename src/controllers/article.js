@@ -269,7 +269,12 @@ class ArticleController {
     }
 
     // classify 筛选
-    if (classify) querys.classify = classify
+    if (classify){
+      querys.classify = {
+        '$all': classify
+      }
+    }
+    // if (classify) querys.classify = classify
 
     // 查询
     const res = await Article
