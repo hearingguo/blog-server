@@ -91,11 +91,12 @@ class ClassifyController {
   static async postClassify(ctx) {
     const {
       title,
+      name,
       description
     } = ctx.request.body
 
     const oldClassify = await Classify
-    .findOne({ title })
+    .findOne({ name })
     .catch(err => ctx.throw(500, msg.msg_cn.error))
 
     if (oldClassify) {
@@ -107,7 +108,8 @@ class ClassifyController {
     }
 
     const classify = await new Classify({
-        title,
+       title,
+        name,
         description
       })
       .save()
